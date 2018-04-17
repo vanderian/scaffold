@@ -1,0 +1,45 @@
+ext.minSdkVersion = 15
+ext.compileSdkVersion = 27
+ext.buildToolsVersion = '27.0.3'
+
+buildscript {
+    ext.kotlin_version = '1.2.31'
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
+        classpath 'com.selesse:gradle-git-changelog:0.3.0'
+    }
+}
+
+apply from: rootProject.file("gradle/dependencies.gradle")
+apply plugin: 'com.selesse.git.changelog'
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+changelog {
+    markdown {
+        commitFormat = '* %s (%aE)'
+    }
+}
+
+static def isCI() {
+    System.getenv("CI")
+}

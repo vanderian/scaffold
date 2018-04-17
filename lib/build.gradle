@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'net.ltgt.errorprone'
+// discover dependency current versions ./gradlew dependencyUpdates -Drevision=release
+apply plugin: 'com.github.ben-manes.versions'
+
+apply from: rootProject.file("gradle/compile.gradle")
+apply from: rootProject.file("gradle/android.gradle")
+
+kapt {
+    correctErrorTypes = true
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.kotlin
+
+    implementation deps.design
+//    implementation deps.calligraphy
+
+    api deps.butterknife
+    api deps.recyclerview
+    api deps.coordinators
+    api deps.flow
+    api deps.rxjava
+    api deps.rxjava_android
+    api deps.rxjava_kotlin
+    api deps.timber
+
+    api deps.lifecycle_runtime
+    api deps.lifecycle_ext
+
+    api deps.dagger
+    api deps.dagger_android
+    api deps.autodagger
+    kapt deps.dagger_compiler
+    kapt deps.autodagger_compiler
+    compileOnly deps.javax_annotations
+
+    testImplementation deps.junit
+
+    androidTestImplementation(deps.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}
