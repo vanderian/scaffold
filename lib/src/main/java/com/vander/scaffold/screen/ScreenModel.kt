@@ -24,4 +24,7 @@ abstract class ScreenModel<T : Screen.State, in U : Screen.Intents>(default: T? 
   protected fun BehaviorSubject<T>.next(state: T.() -> T) =
       this.onNext(state.invoke(this.value))
 
+  protected fun BehaviorSubject<T>.init(state: T) {
+    if (!hasValue()) onNext(state)
+  }
 }
