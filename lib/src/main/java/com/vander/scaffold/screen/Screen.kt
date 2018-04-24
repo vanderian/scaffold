@@ -28,8 +28,8 @@ import kotlin.reflect.KClass
 /**
  * @author marian on 20.9.2017.
  */
-abstract class Screen<T : ScreenModel<U, V>, U : Screen.State, V : Screen.Intents>(
-    private val clazz: KClass<T>
+abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
+    private val clazz: KClass<out ScreenModel<U, V>>
 ) : Fragment(), Injectable {
 
   interface State
@@ -39,7 +39,7 @@ abstract class Screen<T : ScreenModel<U, V>, U : Screen.State, V : Screen.Intent
 
   private val result = BehaviorSubject.create<Result>()
   private lateinit var unbind: Unbinder
-  private lateinit var model: T
+  private lateinit var model: ScreenModel<U, V>
   private val onEvent: PublishSubject<Event> = PublishSubject.create()
   protected val disposable = CompositeDisposable()
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
@@ -86,6 +86,7 @@ abstract class Screen<T : ScreenModel<U, V>, U : Screen.State, V : Screen.Intent
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     model = ViewModelProviders.of(this, modelFactory)[clazz.java]
+    model.state.hasValue()
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -132,6 +133,7 @@ abstract class Screen<T : ScreenModel<U, V>, U : Screen.State, V : Screen.Intent
 
   companion object {
     const val ARG_OBJ = "arg_object"
+    const val ARG_STATE = "arg_state"
     const val JSON_EXTRA = "json_extra"
   }
 }

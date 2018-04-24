@@ -10,8 +10,8 @@ import io.reactivex.subjects.PublishSubject
 /**
  * @author marian on 24.9.2017.
  */
-abstract class ScreenModel<T : Screen.State, in U : Screen.Intents>(default: T) : ViewModel() {
-  val state: BehaviorSubject<T> = BehaviorSubject.createDefault(default)
+abstract class ScreenModel<T : Screen.State, in U : Screen.Intents>(default: T? = null) : ViewModel() {
+  val state: BehaviorSubject<T> = if (default != null) BehaviorSubject.createDefault(default) else BehaviorSubject.create()
   val event: PublishSubject<Event> = PublishSubject.create()
 
   abstract fun collectIntents(intents: U, result: Observable<Result>): Disposable

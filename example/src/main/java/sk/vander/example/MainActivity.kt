@@ -27,14 +27,14 @@ data class FooState(
     val text: String
 ) : Screen.State
 
-class FooModel @Inject constructor() : ScreenModel<FooState, Empty>(FooState("init")) {
+class FooModel @Inject constructor() : ScreenModel<FooState, Empty>() {
   override fun collectIntents(intents: Empty, result: Observable<Result>): Disposable {
-    state.next { copy(text = "hello") }
+    state.onNext(FooState("hello"))
     return CompositeDisposable()
   }
 }
 
-class FooScreen : Screen<FooModel, FooState, Empty>(FooModel::class) {
+class FooScreen : Screen<FooState, Empty>(FooModel::class) {
   @BindView(R.id.text) lateinit var text: TextView
 
   override fun layout(): Int = R.layout.activity_main
