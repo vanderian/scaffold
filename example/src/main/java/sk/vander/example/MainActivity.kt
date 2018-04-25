@@ -34,7 +34,7 @@ class FooModel @Inject constructor() : ScreenModel<FooState, Empty>() {
   }
 }
 
-class FooScreen : Screen<FooState, Empty>(FooModel::class) {
+class FooScreen : Screen<FooState, Empty>() {
   @BindView(R.id.text) lateinit var text: TextView
 
   override fun layout(): Int = R.layout.activity_main
