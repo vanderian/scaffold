@@ -86,6 +86,7 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     model = ViewModelProviders.of(this, modelFactory)[clazz.java]
+    model.args = arguments ?: Bundle.EMPTY
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

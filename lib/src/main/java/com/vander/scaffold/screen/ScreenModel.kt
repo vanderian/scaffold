@@ -1,6 +1,7 @@
 package com.vander.scaffold.screen
 
 import android.arch.lifecycle.ViewModel
+import android.os.Bundle
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -13,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 abstract class ScreenModel<T : Screen.State, in U : Screen.Intents>(default: T? = null) : ViewModel() {
   val state: BehaviorSubject<T> = if (default != null) BehaviorSubject.createDefault(default) else BehaviorSubject.create()
   val event: PublishSubject<Event> = PublishSubject.create()
+  lateinit var args: Bundle
 
   abstract fun collectIntents(intents: U, result: Observable<Result>): Disposable
 
