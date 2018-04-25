@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
  * @author marian on 20.9.2017.
  */
 abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
-    private val clazz: KClass<out ScreenModel<U, V>>
+    private val clazz: KClass<out ScreenModel<U, V>> = Class.forName(this::class.java.name.replace("Screen", "Model")).kotlin as KClass<ScreenModel<U,V>>
 ) : Fragment(), Injectable {
 
   interface State
@@ -86,7 +86,6 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     model = ViewModelProviders.of(this, modelFactory)[clazz.java]
-    model.state.hasValue()
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
