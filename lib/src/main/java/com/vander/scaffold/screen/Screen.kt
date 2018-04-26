@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
  * @author marian on 20.9.2017.
  */
 abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
-    private val clazz: KClass<out ScreenModel<U, V>> = Class.forName(this::class.java.name.replace("Screen", "Model")).kotlin as KClass<ScreenModel<U,V>>
+    private val clazz: KClass<out ScreenModel<U, V>> = Class.forName(this::class.java.name.replace("Screen", "Model")).kotlin as KClass<ScreenModel<U, V>>
 ) : Fragment(), Injectable {
 
   interface State
@@ -81,6 +81,10 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
     arguments = Bundle().apply { putParcelable(ARG_OBJ, obj) }
   }
 
+  protected fun setId(id: Long) {
+    arguments = Bundle().apply { putLong(ARG_ID, id) }
+  }
+
   fun <T : Event> event(clazz: KClass<T>): Observable<T> = onEvent.ofType(clazz.java)
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,8 +125,6 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
     super.onStop()
   }
 
-  fun <T : Parcelable> getArgument(): T? = arguments?.getParcelable(ARG_OBJ)
-
   fun result(result: Result) {
     this.result.onNext(result)
   }
@@ -133,7 +135,10 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
 
   companion object {
     const val ARG_OBJ = "arg_object"
-    const val ARG_STATE = "arg_state"
+    const val ARG_ID = "arg_id"
     const val JSON_EXTRA = "json_extra"
+
+    fun <T : Parcelable> getArgument(args: Bundle): T = args.getParcelable(ARG_OBJ)
+    fun getId(args: Bundle): Long = args.getLong(ARG_ID)
   }
 }
