@@ -1,5 +1,5 @@
-def support_version = '27.0.2'
-def arch_version = '1.0.0'
+def support_version = '27.1.1'
+def arch_version = '1.1.0'
 ext.deps = [
         appcompat_v7                : "com.android.support:appcompat-v7:$support_version",
         support_v4                  : "com.android.support:support-v4:$support_version",
@@ -10,7 +10,7 @@ ext.deps = [
         preference                  : "com.android.support:preference-v7:$support_version",
         annotations                 : "com.android.support:support-annotations:$support_version",
         multidex                    : "com.android.support:multidex:1.0.1",
-        constraint_layout           : 'com.android.support.constraint:constraint-layout:1.0.2',
+        constraint_layout           : 'com.android.support.constraint:constraint-layout:1.1.0',
         lifecycle_runtime           : 'android.arch.lifecycle:runtime:1.0.0',
         lifecycle_ext               : "android.arch.lifecycle:extensions:$arch_version",
         lifecycle_compiler          : "android.arch.lifecycle:compiler:$arch_version",

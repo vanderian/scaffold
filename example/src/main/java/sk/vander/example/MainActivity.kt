@@ -1,9 +1,16 @@
 package sk.vander.example
 
 import android.os.Bundle
+import android.support.design.widget.TextInputLayout
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import butterknife.BindView
-import com.vander.scaffold.screen.Empty
+import com.jakewharton.rxbinding2.view.clicks
+import com.vander.scaffold.form.Form
+import com.vander.scaffold.form.validator.EmailRule
+import com.vander.scaffold.form.validator.NotEmptyRule
+import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.screen.Result
 import com.vander.scaffold.screen.Screen
 import com.vander.scaffold.screen.ScreenModel
@@ -17,32 +24,58 @@ class MainActivity : FragmentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    supportFragmentManager.beginTransaction()
-        .replace(R.id.container_id, FooScreen())
-        .commit()
+    if (savedInstanceState == null) {
+      supportFragmentManager.beginTransaction()
+          .replace(R.id.container_id, FooScreen())
+          .commit()
+    }
   }
 }
 
 data class FooState(
-    val text: String
+    val text: String,
+    val formData: Form.FormData = Form.FormData()
 ) : Screen.State
 
-class FooModel @Inject constructor() : ScreenModel<FooState, Empty>() {
-  override fun collectIntents(intents: Empty, result: Observable<Result>): Disposable {
-    state.onNext(FooState("hello"))
-    return CompositeDisposable()
+interface FooIntents : Screen.Intents {
+  fun formState(): Observable<Form.FormData>
+}
+
+class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
+  override fun collectIntents(intents: FooIntents, result: Observable<Result>): Disposable {
+    state.init(FooState("hello"))
+
+    return CompositeDisposable(
+        intents.formState().subscribe{ state.next { copy(formData = it) }}
+    )
   }
 }
 
-class FooScreen : Screen<FooState, Empty>() {
+class FooScreen : Screen<FooState, FooIntents>() {
   @BindView(R.id.text) lateinit var text: TextView
+  @BindView(R.id.submit) lateinit var submit: Button
+  @BindView(R.id.input_first) lateinit var input1: TextInputLayout
+  @BindView(R.id.input_second) lateinit var input2: TextInputLayout
+  private val form = Form()
 
   override fun layout(): Int = R.layout.activity_main
 
-  override fun intents(): Empty = Empty
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    form.init(
+        input1 to linkedSetOf(NotEmptyRule(R.string.error_empty), EmailRule(R.string.error_email)),
+        input2 to linkedSetOf<ValidateRule>(NotEmptyRule(R.string.error_empty))
+    )
+  }
+
+  override fun intents(): FooIntents = object : FooIntents {
+    override fun formState(): Observable<Form.FormData> = submit.clicks()
+        .flatMapSingle { form.validate() }
+  }
 
   override fun render(state: FooState) {
     text.text = state.text
+    form.restore(state.formData)
   }
 
 }
