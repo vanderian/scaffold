@@ -10,9 +10,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.vander.scaffold.form.Form
 import com.vander.scaffold.form.FormData
 import com.vander.scaffold.form.FormResult
-import com.vander.scaffold.form.validator.EmailRule
-import com.vander.scaffold.form.validator.NotEmptyRule
-import com.vander.scaffold.form.validator.ValidateRule
+import com.vander.scaffold.form.validator.*
 import com.vander.scaffold.screen.Result
 import com.vander.scaffold.screen.Screen
 import com.vander.scaffold.screen.ScreenModel
@@ -57,24 +55,27 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
 class FooScreen : Screen<FooState, FooIntents>() {
   @BindView(R.id.text) lateinit var text: TextView
   @BindView(R.id.submit) lateinit var submit: Button
+
+  @NotEmptyValidation(R.string.error_empty)
+  @EmailValidation(R.string.error_email)
   @BindView(R.id.input_first) lateinit var input1: TextInputLayout
+
+  @NotEmptyValidation(R.string.error_empty)
   @BindView(R.id.input_second) lateinit var input2: TextInputLayout
-  private val form = Form()
+
+  private lateinit var form: Form
 
   override fun layout(): Int = R.layout.activity_main
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    form.init(
-        input1 to linkedSetOf(NotEmptyRule(R.string.error_empty), EmailRule(R.string.error_email)),
-        input2 to linkedSetOf<ValidateRule>(NotEmptyRule(R.string.error_empty))
-    )
+    form = Form.init(this)
   }
 
   override fun intents(): FooIntents = object : FooIntents {
     override val form: Form = this@FooScreen.form
     override fun submit(): Observable<FormResult> = submit.clicks()
-        .flatMapSingle { form.validate() }
+        .flatMapSingle { form.validate(input2 to ValueCheckRule("bar", R.string.error_no_match)) }
   }
 
   override fun render(state: FooState) {

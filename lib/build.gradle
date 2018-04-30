@@ -15,6 +15,7 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin
+    implementation deps.kotlin_reflect
 
     implementation deps.design
 //    implementation deps.calligraphy
@@ -27,8 +28,8 @@ dependencies {
     api deps.rxjava_android
     api deps.rxjava_kotlin
     api deps.timber
-    api deps.rxbindings_design_kt
-    api deps.rxbindings_appcompat_kt
+    implementation deps.rxbindings_design_kt
+    implementation deps.rxbindings_appcompat_kt
 
     api deps.lifecycle_runtime
     api deps.lifecycle_ext
