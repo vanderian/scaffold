@@ -8,6 +8,8 @@ import android.widget.TextView
 import butterknife.BindView
 import com.jakewharton.rxbinding2.view.clicks
 import com.vander.scaffold.form.Form
+import com.vander.scaffold.form.FormData
+import com.vander.scaffold.form.FormResult
 import com.vander.scaffold.form.validator.EmailRule
 import com.vander.scaffold.form.validator.NotEmptyRule
 import com.vander.scaffold.form.validator.ValidateRule
@@ -34,11 +36,11 @@ class MainActivity : FragmentActivity() {
 
 data class FooState(
     val text: String,
-    val formData: Form.FormData = Form.FormData()
+    val formData: FormData = emptyMap()
 ) : Screen.State
 
-interface FooIntents : Screen.Intents {
-  fun formState(): Observable<Form.FormData>
+interface FooIntents : Form.FormIntents {
+  fun submit(): Observable<FormResult>
 }
 
 class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
@@ -46,7 +48,8 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
     state.init(FooState("hello"))
 
     return CompositeDisposable(
-        intents.formState().subscribe{ state.next { copy(formData = it) }}
+        intents.state().subscribe { state.next { copy(formData = it) } },
+        intents.submit().subscribe { }
     )
   }
 }
@@ -69,7 +72,8 @@ class FooScreen : Screen<FooState, FooIntents>() {
   }
 
   override fun intents(): FooIntents = object : FooIntents {
-    override fun formState(): Observable<Form.FormData> = submit.clicks()
+    override val form: Form = this@FooScreen.form
+    override fun submit(): Observable<FormResult> = submit.clicks()
         .flatMapSingle { form.validate() }
   }
 

@@ -27,6 +27,8 @@ dependencies {
     api deps.rxjava_android
     api deps.rxjava_kotlin
     api deps.timber
+    api deps.rxbindings_design_kt
+    api deps.rxbindings_appcompat_kt
 
     api deps.lifecycle_runtime
     api deps.lifecycle_ext
