@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Example</string>
 
-    <string name="error_no_match">not match</string>
+    <string name="error_no_match">%1$s not match %2$s</string>
     <string name="error_empty">not empty</string>
     <string name="error_email">not email</string>
 </resources>

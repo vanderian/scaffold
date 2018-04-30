@@ -2,26 +2,23 @@ package com.vander.scaffold.form
 
 import android.support.design.widget.TextInputLayout
 import android.text.Editable
-import android.text.Selection.setSelection
 import android.view.View
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
-import com.vander.scaffold.form.validator.*
-import com.vander.scaffold.screen.Screen
+import com.vander.scaffold.form.validator.AfterTextChangedWatcher
+import com.vander.scaffold.form.validator.ValidateRule
+import com.vander.scaffold.form.validator.Validation
+import com.vander.scaffold.form.validator.Validator
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.jvm.jvmErasure
 
 typealias FormData = Map<Int, Editable>
 typealias FormResult = Pair<Boolean, Map<Int, Editable>>
 
-class Form {
+class Form : Validator {
   private val state: MutableMap<Int, Editable> = mutableMapOf()
-  private lateinit var items: Map<TextInputLayout, LinkedHashSet<ValidateRule>>
+  private lateinit var items: Map<TextInputLayout, Set<ValidateRule>>
 
   private fun TextInputLayout.clearErrorAfterChange() {
     editText?.addTextChangedListener(AfterTextChangedWatcher({ isErrorEnabled = false }))
@@ -31,22 +28,39 @@ class Form {
       if (visibility != View.VISIBLE) true else
         rules.find { !it.validate(editText?.text.toString()) }
             .let {
-              error = it?.let { context.getString(it.errorMessage) }
+              error = it?.let {
+                if (it.errorRes != -1) context.getString(it.errorRes)
+                else it.errorMessage.invoke(editText?.text.toString())
+              }
               it == null
             }
 
-  fun init(vararg inputValidationPairs: Pair<TextInputLayout, LinkedHashSet<ValidateRule>>) {
-    check(inputValidationPairs.all { it.first.editText != null })
-    inputValidationPairs.forEach { it.first.clearErrorAfterChange() }
-    items = mapOf(*inputValidationPairs)
-  }
-
-  fun validate(vararg extra: Pair<TextInputLayout, ValidateRule> = emptyArray()): Single<FormResult> =
-//      items.plus(extra.map { it.first to linkedSetOf(it.second) })
-      items
-          .map { (input, rules) -> input.validate(*rules.toTypedArray()) }
+  private fun Map<TextInputLayout, Set<ValidateRule>>.validate(): Single<FormResult> =
+      map { (input, rules) -> input.validate(*rules.toTypedArray()) }
           .find { !it }
           .let { Single.just(FormResult(it == null, state.toMap())) }
+
+  private fun init(vararg validations: Validation) {
+    check(validations.all { it.input.editText != null })
+    validations.forEach { it.input.clearErrorAfterChange() }
+    items = validations.associate { it.input to it.rules }
+  }
+
+  override fun validate(): Single<FormResult> = items.validate()
+
+  fun with(vararg validations: Validation) = object : Validator {
+    override fun validate(): Single<FormResult> {
+      val map = items.toMutableMap()
+      validations.forEach {
+        if (map.containsKey(it.input)) {
+          map[it.input] = map[it.input]!!.plus(it.rules)
+        } else {
+          map[it.input] = it.rules
+        }
+      }
+      return map.validate()
+    }
+  }
 
   fun state(): Observable<FormData> =
       items.map { (input, _) -> input.editText!!.afterTextChangeEvents().skipInitialValue().map { input.id to it.editable()!! } }
@@ -68,36 +82,7 @@ class Form {
   }
 
   companion object {
-    internal val registered = mutableMapOf<KClass<out Annotation>, (Annotation) -> ValidateRule>()
-
-    fun <T : Annotation> register(clazz: KClass<out T>, rule: (T) -> ValidateRule) {
-      registered[clazz] = rule as (Annotation) -> ValidateRule
-    }
-
-    fun <T : Screen<*, *>> init(screen: T): Form = Form().apply {
-      val fields =
-          screen::class.declaredMemberProperties
-              .filter { it.returnType.jvmErasure == TextInputLayout::class }
-              .filter { it.annotations.any { registered.keys.contains(it.annotationClass) } }
-              .map { it as KProperty1<T, TextInputLayout> }
-
-      init(*fields.map {
-        val input = it.get(screen)
-        val rules = it.annotations
-            .filter { registered.containsKey(it.annotationClass) }
-            .map { registered[it.annotationClass]!!.invoke(it) }
-        input to linkedSetOf(*rules.toTypedArray())
-      }.toTypedArray())
-    }
-
-    init {
-      register(EmailValidation::class, { EmailRule(it.msg) })
-      register(NotEmptyValidation::class, { NotEmptyRule(it.msg) })
-    }
+    fun init(vararg validations: Validation) = Form().apply { init(*validations) }
   }
 
-  interface FormIntents : Screen.Intents {
-    val form: Form
-    fun state(): Observable<FormData> = form.state()
-  }
 }

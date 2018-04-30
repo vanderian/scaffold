@@ -9,6 +9,7 @@ import butterknife.BindView
 import com.jakewharton.rxbinding2.view.clicks
 import com.vander.scaffold.form.Form
 import com.vander.scaffold.form.FormData
+import com.vander.scaffold.form.FormIntents
 import com.vander.scaffold.form.FormResult
 import com.vander.scaffold.form.validator.*
 import com.vander.scaffold.screen.Result
@@ -37,7 +38,7 @@ data class FooState(
     val formData: FormData = emptyMap()
 ) : Screen.State
 
-interface FooIntents : Form.FormIntents {
+interface FooIntents : FormIntents {
   fun submit(): Observable<FormResult>
 }
 
@@ -55,12 +56,7 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
 class FooScreen : Screen<FooState, FooIntents>() {
   @BindView(R.id.text) lateinit var text: TextView
   @BindView(R.id.submit) lateinit var submit: Button
-
-  @NotEmptyValidation(R.string.error_empty)
-  @EmailValidation(R.string.error_email)
   @BindView(R.id.input_first) lateinit var input1: TextInputLayout
-
-  @NotEmptyValidation(R.string.error_empty)
   @BindView(R.id.input_second) lateinit var input2: TextInputLayout
 
   private lateinit var form: Form
@@ -69,13 +65,19 @@ class FooScreen : Screen<FooState, FooIntents>() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    form = Form.init(this)
+    form = Form.init(
+        Validation(input1, NotEmptyRule(R.string.error_empty), EmailRule(R.string.error_email)),
+        Validation(input2, NotEmptyRule(R.string.error_empty))
+    )
   }
 
   override fun intents(): FooIntents = object : FooIntents {
     override val form: Form = this@FooScreen.form
     override fun submit(): Observable<FormResult> = submit.clicks()
-        .flatMapSingle { form.validate(input2 to ValueCheckRule("bar", R.string.error_no_match)) }
+        .flatMapSingle {
+          form.with(Validation(input2, ValueCheckRule("bar", { getString(R.string.error_no_match, "bar", it) })))
+              .validate()
+        }
   }
 
   override fun render(state: FooState) {

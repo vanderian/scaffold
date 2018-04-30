@@ -1,7 +1,7 @@
 package com.vander.scaffold.form.validator
 
-class NotEmptyRule(override val errorMessage: Int) : ValidateRule {
+import android.support.annotation.StringRes
+
+class NotEmptyRule(@StringRes override val errorRes: Int) : ValidateRule() {
   override fun validate(text: String?) = text?.isNotBlank() ?: false
 }
-
-annotation class NotEmptyValidation(val msg: Int, val order: Int = -1)
