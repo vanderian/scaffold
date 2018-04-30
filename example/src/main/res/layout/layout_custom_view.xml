@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+some shareable complex view structure that would be a custom view otherwise
+but we will just use a coordinator to avoid extending *View classes
+ -->
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:tag="sk.vander.example.FooCoordinator"
+    >
+
+    <Button
+        android:id="@+id/submit"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        />
+
+</android.support.constraint.ConstraintLayout>

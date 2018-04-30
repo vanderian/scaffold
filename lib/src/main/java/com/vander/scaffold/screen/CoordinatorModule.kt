@@ -3,6 +3,7 @@ package com.vander.scaffold.screen
 import com.vander.scaffold.annotations.ActivityScope
 import com.squareup.coordinators.Coordinator
 import com.squareup.coordinators.CoordinatorProvider
+import com.squareup.coordinators.R
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds

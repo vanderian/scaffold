@@ -30,6 +30,11 @@ abstract class FragmentActivity : AppCompatActivity(), HasSupportFragmentInjecto
     container.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(object : ViewGroup.OnHierarchyChangeListener {
       override fun onChildViewAdded(parent: View, child: View) {
         Coordinators.bind(child, coordinatorProvider)
+
+        coordinatorProvider.provideCoordinator(child)?.let {
+          it.attach(child)
+          child.setTag(com.squareup.coordinators.R.id.coordinator, it)
+        }
       }
 
       override fun onChildViewRemoved(parent: View, child: View) {}
