@@ -42,4 +42,10 @@ abstract class FragmentActivity : AppCompatActivity(), HasSupportFragmentInjecto
   }
 
   override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
+
+  override fun onBackPressed() {
+    if (supportFragmentManager.findFragmentById(R.id.container_id).handlesBack().not()) {
+      super.onBackPressed()
+    }
+  }
 }

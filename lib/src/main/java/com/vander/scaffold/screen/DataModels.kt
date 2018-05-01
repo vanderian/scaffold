@@ -3,7 +3,6 @@ package com.vander.scaffold.screen
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
-import com.vander.scaffold.ui.widget.adapter.AdapterModel
 import kotlin.reflect.KClass
 
 /**
@@ -32,10 +31,3 @@ data class Result(
 )
 
 object Empty : Screen.State, Screen.Intents
-
-data class ListState<out T : AdapterModel>(
-    val items: List<T> = emptyList(),
-    val loading: Boolean = true,
-    val empty: Boolean = false
-) : Screen.State
-

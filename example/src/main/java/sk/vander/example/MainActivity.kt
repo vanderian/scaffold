@@ -18,9 +18,11 @@ import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.form.validator.ValueCheckRule
 import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
+import com.vander.scaffold.ui.HandlesBack
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import java.util.concurrent.Callable
 import javax.inject.Inject
 
 class MainActivity : FragmentActivity() {
@@ -42,6 +44,7 @@ data class FooState(
 
 interface FooIntents : FormIntents {
   fun submit(): Observable<FormResult>
+  fun back(): Observable<Unit>
 }
 
 class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
@@ -50,21 +53,22 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
 
     return CompositeDisposable(
         intents.state().subscribe { state.next { copy(formData = it) } },
-        intents.submit().subscribe { }
-    )
+        intents.submit().subscribe { },
+        intents.back().subscribe { state.next { copy(text = "on back") } })
   }
 }
 
-class FooScreen : Screen<FooState, FooIntents>() {
+class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
   @BindView(R.id.text) lateinit var text: TextView
   @BindView(R.id.view_complex) lateinit var complex: View
   @BindView(R.id.input_first) lateinit var input1: TextInputLayout
   @BindView(R.id.input_second) lateinit var input2: TextInputLayout
-
   private lateinit var form: Form
+
   private val coordinator
     get() = complex.getCoordinator() as FooCoordinator
 
+  lateinit var onBack: Callable<Boolean>
 
   override fun layout(): Int = R.layout.activity_main
 
@@ -83,6 +87,8 @@ class FooScreen : Screen<FooState, FooIntents>() {
           form.with(Validation(input2, ValueCheckRule("bar", { getString(R.string.error_no_match, "bar", it) })))
               .validate()
         }
+
+    override fun back(): Observable<Unit> = Observable.create { emitter -> onBack = Callable { emitter.onNext(Unit); true } }
   }
 
   override fun render(state: FooState) {
@@ -90,6 +96,7 @@ class FooScreen : Screen<FooState, FooIntents>() {
     form.restore(state.formData)
   }
 
+  override fun onBackPressed(): Boolean = if (text.text == "on back") false else onBack.call()
 }
 
 class FooCoordinator @Inject constructor() : Coordinator() {
