@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
+import com.vander.scaffold.ui.ActivityHierarchyServer
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
-import com.vander.scaffold.ui.ActivityHierarchyServer
 
 /**
  * @author marian on 21.9.2017.

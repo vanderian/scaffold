@@ -2,9 +2,9 @@ package com.vander.scaffold.ui
 
 import android.app.Activity
 import android.content.Context
+import com.vander.scaffold.annotations.ActivityScope
 import dagger.Module
 import dagger.Provides
-import com.vander.scaffold.annotations.ActivityScope
 
 @Module
 @ActivityScope

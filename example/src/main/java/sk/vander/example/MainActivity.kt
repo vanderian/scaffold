@@ -8,17 +8,15 @@ import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
 import com.jakewharton.rxbinding2.view.clicks
-import com.squareup.coordinators.Coordinator
-import com.squareup.coordinators.Coordinators
 import com.vander.scaffold.form.Form
 import com.vander.scaffold.form.FormData
 import com.vander.scaffold.form.FormIntents
 import com.vander.scaffold.form.FormResult
-import com.vander.scaffold.form.validator.*
-import com.vander.scaffold.screen.BaseCoordinator
-import com.vander.scaffold.screen.Result
-import com.vander.scaffold.screen.Screen
-import com.vander.scaffold.screen.ScreenModel
+import com.vander.scaffold.form.validator.EmailRule
+import com.vander.scaffold.form.validator.NotEmptyRule
+import com.vander.scaffold.form.validator.Validation
+import com.vander.scaffold.form.validator.ValueCheckRule
+import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -65,7 +63,7 @@ class FooScreen : Screen<FooState, FooIntents>() {
 
   private lateinit var form: Form
   private val coordinator
-    get() = Coordinators.getCoordinator(complex) as FooCoordinator
+    get() = complex.getCoordinator() as FooCoordinator
 
 
   override fun layout(): Int = R.layout.activity_main
@@ -80,7 +78,7 @@ class FooScreen : Screen<FooState, FooIntents>() {
 
   override fun intents(): FooIntents = object : FooIntents {
     override val form: Form = this@FooScreen.form
-    override fun submit(): Observable<FormResult> = complex.clicks()
+    override fun submit(): Observable<FormResult> = coordinator.clicks()
         .flatMapSingle {
           form.with(Validation(input2, ValueCheckRule("bar", { getString(R.string.error_no_match, "bar", it) })))
               .validate()
@@ -94,17 +92,12 @@ class FooScreen : Screen<FooState, FooIntents>() {
 
 }
 
-class FooCoordinator @Inject constructor() : BaseCoordinator() {
+class FooCoordinator @Inject constructor() : Coordinator() {
   @BindView(R.id.submit) lateinit var submit: Button
 
   override fun attach(view: View) {
     super.attach(view)
     Toast.makeText(view.context, "attach", Toast.LENGTH_SHORT).show()
-  }
-
-  override fun detach(view: View) {
-    Toast.makeText(view.context, "detach", Toast.LENGTH_SHORT).show()
-    super.detach(view)
   }
 
   fun clicks(): Observable<Unit> = submit.clicks()

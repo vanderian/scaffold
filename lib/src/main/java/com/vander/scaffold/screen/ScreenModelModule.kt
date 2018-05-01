@@ -22,7 +22,7 @@ object ScreenModelModule {
       if (creators.containsKey(modelClass)) {
         return creators[modelClass]!!.get() as T
       } else {
-        throw IllegalArgumentException("unknown model class " + modelClass)
+        throw IllegalArgumentException("unknown model class $modelClass")
       }
     }
   }

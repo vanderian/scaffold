@@ -1,6 +1,6 @@
 package com.vander.scaffold.annotations
 
-import com.squareup.coordinators.Coordinator
+import com.vander.scaffold.screen.Coordinator
 import dagger.MapKey
 import kotlin.reflect.KClass
 

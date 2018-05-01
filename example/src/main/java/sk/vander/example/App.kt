@@ -3,10 +3,10 @@ package sk.vander.example
 import android.arch.lifecycle.ViewModel
 import autodagger.AutoComponent
 import autodagger.AutoInjector
-import com.squareup.coordinators.Coordinator
 import com.vander.scaffold.BaseApp
 import com.vander.scaffold.BaseAppModule
 import com.vander.scaffold.annotations.*
+import com.vander.scaffold.screen.Coordinator
 import com.vander.scaffold.screen.CoordinatorModule
 import com.vander.scaffold.ui.ViewContainer
 import dagger.Binds

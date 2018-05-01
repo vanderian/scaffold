@@ -15,15 +15,12 @@ kapt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin
-    implementation deps.kotlin_reflect
 
     implementation deps.design
 //    implementation deps.calligraphy
 
     api deps.butterknife
     api deps.recyclerview
-    api deps.coordinators
-    api deps.flow
     api deps.rxjava
     api deps.rxjava_android
     api deps.rxjava_kotlin

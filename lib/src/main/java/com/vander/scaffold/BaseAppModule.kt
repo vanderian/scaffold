@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import com.vander.scaffold.annotations.ApplicationScope
-import com.vander.scaffold.ui.ActivityHierarchyServer
 import com.vander.scaffold.screen.ScreenModelModule
+import com.vander.scaffold.ui.ActivityHierarchyServer
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
