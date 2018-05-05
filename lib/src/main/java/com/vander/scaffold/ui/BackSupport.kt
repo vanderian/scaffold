@@ -1,7 +1,13 @@
 package com.vander.scaffold.ui
 
+import com.vander.scaffold.screen.Screen
+
 interface HandlesBack {
   fun onBackPressed(): Boolean
 }
 
-fun Any.handlesBack(): Boolean = (this as? HandlesBack)?.onBackPressed() ?: false
+object BackSupport {
+  fun handlesBack(any: Any) = (any as? HandlesBack)?.onBackPressed() ?: false
+}
+
+fun Screen<*, *>.handlesBack(): Boolean = BackSupport.handlesBack(this)

@@ -15,7 +15,6 @@ import com.vander.scaffold.form.FormResult
 import com.vander.scaffold.form.validator.EmailRule
 import com.vander.scaffold.form.validator.NotEmptyRule
 import com.vander.scaffold.form.validator.Validation
-import com.vander.scaffold.form.validator.ValueCheckRule
 import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
 import com.vander.scaffold.ui.HandlesBack

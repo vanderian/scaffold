@@ -28,7 +28,7 @@ import kotlin.reflect.KClass
 /**
  * @author marian on 20.9.2017.
  */
-abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
+abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     private val clazz: KClass<out ScreenModel<U, V>>? = null
 ) : Fragment(), Injectable {
 
@@ -41,8 +41,11 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
   private lateinit var unbind: Unbinder
   private lateinit var model: ScreenModel<U, V>
   private val onEvent: PublishSubject<Event> = PublishSubject.create()
-  protected val disposable = CompositeDisposable()
+  private val disposable = CompositeDisposable()
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
+
+  val state: U
+    get() = model.state.value
 
   @LayoutRes abstract fun layout(): Int
   abstract fun intents(): V
@@ -89,7 +92,7 @@ abstract class Screen<in U : Screen.State, out V : Screen.Intents>(
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val c = clazz?.java ?: Class.forName(javaClass.name.replace("Screen", "Model")) as Class<ScreenModel<U,V>>
+    val c = clazz?.java ?: Class.forName(javaClass.name.replace("Screen", "Model")) as Class<ScreenModel<U, V>>
     model = ViewModelProviders.of(this, modelFactory)[c]
     model.args = arguments ?: Bundle.EMPTY
   }

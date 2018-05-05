@@ -5,8 +5,8 @@ import com.vander.scaffold.R
 
 object Coordinators {
 
-  fun getCoordinator(view: View): Coordinator {
-    return view.getTag(R.id.coordinator) as Coordinator
+  fun getCoordinator(view: View): Coordinator? {
+    return view.getTag(R.id.coordinator) as? Coordinator
   }
 
   fun add(view: View, provider: CoordinatorProvider) {
