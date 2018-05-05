@@ -14,6 +14,7 @@ import com.vander.scaffold.form.FormIntents
 import com.vander.scaffold.form.FormResult
 import com.vander.scaffold.form.validator.EmailRule
 import com.vander.scaffold.form.validator.NotEmptyRule
+import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
@@ -34,6 +35,10 @@ class MainActivity : FragmentActivity() {
           .commit()
     }
   }
+}
+
+class ValueCheckRule(val value: String, override val errorMessage: (String) -> String) : ValidateRule() {
+  override fun validate(text: String?): Boolean = text == value
 }
 
 data class FooState(
