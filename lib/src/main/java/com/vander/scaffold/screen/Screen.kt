@@ -18,7 +18,6 @@ import com.vander.scaffold.Injectable
 import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -55,13 +54,13 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
       is NextScreen -> fragmentManager!!.beginTransaction()
-          .replace(R.id.container_id, navigation.screen)
+          .replace(id, navigation.screen)
           .addToBackStack("")
           .commit()
       is NextScreenResult -> {
         navigation.screen.setTargetFragment(this, navigation.requestCode)
         fragmentManager!!.beginTransaction()
-            .replace(R.id.container_id, navigation.screen)
+            .replace(id, navigation.screen)
             .addToBackStack("")
             .commit()
       }
