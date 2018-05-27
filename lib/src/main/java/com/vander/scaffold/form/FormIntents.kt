@@ -5,5 +5,5 @@ import io.reactivex.Observable
 
 interface FormIntents : Screen.Intents {
   val form: Form
-  fun state(): Observable<FormData> = form.state()
+  fun formState(): Observable<FormData> = form.state()
 }

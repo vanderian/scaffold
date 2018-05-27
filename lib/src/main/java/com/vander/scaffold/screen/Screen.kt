@@ -54,13 +54,13 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   private fun navigate(navigation: Navigation) {
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
-      is NextScreen -> activity!!.supportFragmentManager.beginTransaction()
+      is NextScreen -> fragmentManager!!.beginTransaction()
           .replace(R.id.container_id, navigation.screen)
           .addToBackStack("")
           .commit()
       is NextScreenResult -> {
         navigation.screen.setTargetFragment(this, navigation.requestCode)
-        activity!!.supportFragmentManager.beginTransaction()
+        fragmentManager!!.beginTransaction()
             .replace(R.id.container_id, navigation.screen)
             .addToBackStack("")
             .commit()

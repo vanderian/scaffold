@@ -56,7 +56,7 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
     state.init(FooState("hello"))
 
     return CompositeDisposable(
-        intents.state().subscribe { state.next { copy(formData = it) } },
+        intents.formState().subscribe { state.next { copy(formData = it) } },
         intents.submit().subscribe { },
         intents.back().subscribe { state.next { copy(text = "on back") } })
   }
