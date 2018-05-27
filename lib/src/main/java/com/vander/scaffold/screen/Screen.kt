@@ -50,32 +50,34 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   abstract fun intents(): V
   abstract fun render(state: U)
 
+  private fun checkStartFinish(intent: Intent, finish: Boolean = false, code: Int = 0, withResult: Boolean = false) {
+    if (intent.resolveActivity(context!!.packageManager) != null) {
+      if (withResult) startActivityForResult(intent, code) else startActivity(intent)
+    } else {
+      Toast.makeText(context, context!!.getString(R.string.no_app_error, intent), Toast.LENGTH_SHORT).show()
+      result.onNext(Result(code))
+    }
+    if (finish) activity?.finish()
+  }
+
   private fun navigate(navigation: Navigation) {
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
-      is NextScreen -> fragmentManager!!.beginTransaction()
-          .replace(id, navigation.screen)
+      is NextScreen -> (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
+          .replace(navigation.id, navigation.screen)
           .addToBackStack("")
           .commit()
       is NextScreenResult -> {
         navigation.screen.setTargetFragment(this, navigation.requestCode)
-        fragmentManager!!.beginTransaction()
-            .replace(id, navigation.screen)
+        (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
+            .replace(navigation.id, navigation.screen)
             .addToBackStack("")
             .commit()
       }
-      is NextActivity -> {
-        startActivity(Intent(context, navigation.clazz.java))
-        if (navigation.finish) activity?.finish()
-      }
-      is ExtActivity -> startActivity(navigation.intent)
-      is WithResult ->
-        if (navigation.intent.resolveActivity(context!!.packageManager) != null) {
-          startActivityForResult(navigation.intent, navigation.requestCode)
-        } else {
-          Toast.makeText(context, context!!.getString(R.string.no_app_error, navigation.intent), Toast.LENGTH_SHORT).show()
-          result.onNext(Result(navigation.requestCode))
-        }
+      is NextActivity -> checkStartFinish(navigation.intent, navigation.finish)
+      is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java), navigation.finish)
+      is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
+      is WithResultExplicit -> checkStartFinish(Intent(context, navigation.clazz.java), code = navigation.requestCode, withResult = true)
     }
   }
 
