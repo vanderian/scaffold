@@ -21,7 +21,7 @@ class NextScreenResult(val screen: Screen<*, *>, val requestCode: Int, val id: I
 class NextActivity(val intent: Intent, val finish: Boolean = false) : Navigation()
 class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false) : Navigation()
 class WithResult(val intent: Intent, val requestCode: Int = 0) : Navigation()
-class WithResultExplicit(val clazz: KClass<out Activity>, val requestCode: Int = 0g) : Navigation()
+class WithResultExplicit(val clazz: KClass<out Activity>, val requestCode: Int = 0) : Navigation()
 
 data class ToastEvent(val msgRes: Int = -1, val msg: String = "", val length: Int = Toast.LENGTH_SHORT) : Event
 interface Notification : Event
