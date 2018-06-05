@@ -14,9 +14,10 @@ interface Event
 interface Dialog : Event
 sealed class Navigation : Event
 
-object None: Navigation()
+object None : Navigation()
 object GoBack : Navigation()
 class NextScreen(val screen: Screen<*, *>, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : Navigation()
+class NextChildScreen(val screen: Screen<*, *>, val id: Int = R.id.child_container_id) : Navigation()
 class NextScreenResult(val screen: Screen<*, *>, val requestCode: Int, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : Navigation()
 class NextActivity(val intent: Intent, val finish: Boolean = false) : Navigation()
 class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false) : Navigation()
