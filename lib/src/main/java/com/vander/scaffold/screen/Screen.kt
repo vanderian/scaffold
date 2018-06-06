@@ -74,6 +74,12 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
             .addToBackStack("")
             .commit()
       }
+      is NextChildScreen -> {
+        childFragmentManager.beginTransaction()
+            .replace(navigation.id, navigation.screen)
+            .addToBackStack("")
+            .commit()
+      }
       is NextActivity -> checkStartFinish(navigation.intent, navigation.finish)
       is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java), navigation.finish)
       is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
