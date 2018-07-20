@@ -1,5 +1,6 @@
 package sk.vander.example
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.view.View
@@ -24,6 +25,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.Callable
 import javax.inject.Inject
+
+val iter: Int = 0
+  get() = field++
 
 class MainActivity : FragmentActivity() {
 
@@ -56,8 +60,9 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
     state.init(FooState("hello"))
 
     return CompositeDisposable(
+        result.subscribe { event.onNext(ToastEvent(msg = "hello result ${it.request}")) },
         intents.formState().subscribe { state.next { copy(formData = it) } },
-        intents.submit().subscribe { },
+        intents.submit().subscribe { event.onNext(WithResultExplicit(MainActivity::class, iter)) },
         intents.back().subscribe { state.next { copy(text = "on back") } })
   }
 }
@@ -88,7 +93,7 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
     override val form: Form = this@FooScreen.form
     override fun submit(): Observable<FormResult> = coordinator.clicks()
         .flatMapSingle {
-          form.with(Validation(input2, ValueCheckRule("bar", { getString(R.string.error_no_match, "bar", it) })))
+          form.with(Validation(input2, ValueCheckRule("bar") { getString(R.string.error_no_match, "bar", it) }))
               .validate()
         }
 

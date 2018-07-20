@@ -19,6 +19,7 @@ import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.AsyncSubject
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
@@ -36,7 +37,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     fun events(): List<Observable<*>> = emptyList()
   }
 
-  private val result = BehaviorSubject.create<Result>()
+  private var result = BehaviorSubject.create<Result>()
   private lateinit var unbind: Unbinder
   private lateinit var model: ScreenModel<U, V>
   private val onEvent: PublishSubject<Event> = PublishSubject.create()
@@ -128,11 +129,12 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    result.onNext(Result(requestCode, resultCode == Activity.RESULT_OK, data?.extras?.getString(JSON_EXTRA) ?: ""))
+    result.onNext(Result(requestCode, resultCode == Activity.RESULT_OK, data))
   }
 
   override fun onStop() {
     disposable.clear()
+    result = BehaviorSubject.create()
     super.onStop()
   }
 

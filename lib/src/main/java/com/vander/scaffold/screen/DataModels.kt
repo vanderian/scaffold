@@ -40,7 +40,7 @@ interface Notification : Event
 data class Result(
     val request: Int,
     val success: Boolean = false,
-    val jsonData: String = ""
+    val intent: Intent? = null
 )
 
 object Empty : Screen.State, Screen.Intents
