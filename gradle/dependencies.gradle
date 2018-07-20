@@ -1,5 +1,5 @@
 def support_version = '27.1.1'
-def arch_version = '1.1.0'
+def arch_version = '1.1.1'
 ext.deps = [
         appcompat_v7                : "com.android.support:appcompat-v7:$support_version",
         support_v4                  : "com.android.support:support-v4:$support_version",

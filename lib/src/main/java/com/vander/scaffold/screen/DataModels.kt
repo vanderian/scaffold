@@ -2,8 +2,18 @@ package com.vander.scaffold.screen
 
 import android.app.Activity
 import android.content.Intent
+import android.support.design.widget.Snackbar
+import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.widget.Toast
+import com.jakewharton.rxbinding2.support.v4.widget.refreshes
+import com.jakewharton.rxbinding2.support.v7.widget.itemClicks
+import com.jakewharton.rxbinding2.support.v7.widget.navigationClicks
 import com.vander.scaffold.R
+import com.vander.scaffold.ui.widget.adapter.AdapterModel
+import com.vander.scaffold.ui.widget.adapter.RecyclerAdapter
+import io.reactivex.Observable
 import kotlin.reflect.KClass
 
 /**
@@ -34,3 +44,22 @@ data class Result(
 )
 
 object Empty : Screen.State, Screen.Intents
+
+interface MenuIntent : Screen.Intents {
+  val toolbar: Toolbar
+  fun menu(): Observable<MenuItem> = toolbar.itemClicks()
+}
+
+interface ListIntents<T : AdapterModel, R> : Screen.Intents {
+  val adapter: RecyclerAdapter<T, R>
+  val refresh: SwipeRefreshLayout
+
+  fun onRefresh(): Observable<Unit> = refresh.refreshes()
+  fun onItem(): Observable<R> = adapter.itemEventSource.toObservable()
+}
+
+interface BackIntent : Screen.Intents {
+  val toolbar: Toolbar
+  fun back(): Observable<Unit> = toolbar.navigationClicks()
+}
+

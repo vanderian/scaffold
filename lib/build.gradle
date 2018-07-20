@@ -27,13 +27,14 @@ dependencies {
     api deps.timber
     implementation deps.rxbindings_design_kt
     implementation deps.rxbindings_appcompat_kt
+    implementation deps.rxbindings_support_kt
 
-    api deps.lifecycle_runtime
     api deps.lifecycle_ext
 
     api deps.dagger
     api deps.dagger_android
     api deps.autodagger
+
     kapt deps.dagger_compiler
     kapt deps.autodagger_compiler
     compileOnly deps.javax_annotations
