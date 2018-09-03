@@ -116,8 +116,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   override fun onStart() {
     super.onStart()
     disposable.addAll(
-        model.state.log("screen state").observeOn(AndroidSchedulers.mainThread()).subscribe { render(it) },
-        model.event.log("screen event").observeOn(AndroidSchedulers.mainThread()).subscribe {
+        model.state.log("screen state").subscribe { render(it) },
+        model.event.log("screen event").subscribe {
           when (it) {
             is Navigation -> navigate(it)
             is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()
