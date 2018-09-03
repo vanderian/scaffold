@@ -7,8 +7,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-@ActivityScope
 class ActivityModule(private val activity: Activity) {
 
-  @Provides fun provideContext(): Context = activity
+  @Provides @ActivityScope fun provideContext(): Context = activity
 }

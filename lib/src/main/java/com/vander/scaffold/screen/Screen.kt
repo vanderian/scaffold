@@ -19,7 +19,6 @@ import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.AsyncSubject
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
@@ -45,7 +44,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
 
   val state: U
-    get() = model.state.value
+    get() = model.state.value!!
 
   @LayoutRes abstract fun layout(): Int
   abstract fun intents(): V

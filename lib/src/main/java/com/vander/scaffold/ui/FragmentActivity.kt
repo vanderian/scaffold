@@ -12,6 +12,7 @@ import com.vander.scaffold.screen.CoordinatorProvider
 import com.vander.scaffold.screen.Coordinators
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 

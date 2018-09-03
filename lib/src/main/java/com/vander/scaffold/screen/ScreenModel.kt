@@ -16,6 +16,9 @@ abstract class ScreenModel<T : Screen.State, in U : Screen.Intents>(default: T? 
   val event: PublishSubject<Event> = PublishSubject.create()
   lateinit var args: Bundle
 
+  val stateValue
+    get() = checkNotNull(state.value)
+
   abstract fun collectIntents(intents: U, result: Observable<Result>): Disposable
 
   internal fun collect(intents: U, result: Observable<Result>): Disposable = CompositeDisposable().apply {
@@ -24,7 +27,7 @@ abstract class ScreenModel<T : Screen.State, in U : Screen.Intents>(default: T? 
   }
 
   protected fun BehaviorSubject<T>.next(state: T.() -> T) =
-      this.onNext(state.invoke(this.value))
+      this.onNext(state.invoke(stateValue))
 
   protected fun BehaviorSubject<T>.init(state: T) {
     if (!hasValue()) onNext(state)

@@ -9,10 +9,16 @@ import com.vander.scaffold.ui.ActivityHierarchyServer
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
+import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.AndroidSupportInjectionModule
 import dagger.multibindings.ElementsIntoSet
 
 @Module(
-    includes = [(AndroidInjectionModule::class), (ScreenModelModule::class)]
+    includes = [
+      AndroidInjectionModule::class,
+      AndroidSupportInjectionModule::class,
+      ScreenModelModule::class
+    ]
 )
 class BaseAppModule(private val app: Application) {
 
