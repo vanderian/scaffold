@@ -22,6 +22,7 @@ import com.vander.scaffold.ui.HandlesBack
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.Callable
 import javax.inject.Inject
 
@@ -94,7 +95,7 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
         .flatMapSingle {
           form.with(Validation(input2, ValueCheckRule("bar") { getString(R.string.error_no_match, "bar", it) }))
               .validate()
-        }
+        }.filter { it.first }
 
     override fun back(): Observable<Unit> = Observable.create { emitter -> onBack = Callable { emitter.onNext(Unit); true } }
   }

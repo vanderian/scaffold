@@ -25,6 +25,7 @@ class App : BaseApp() {
   override fun onCreate() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
+    setupRx()
   }
 
   override fun buildComponentAndInject() =

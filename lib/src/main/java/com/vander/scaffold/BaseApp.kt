@@ -1,8 +1,11 @@
 package com.vander.scaffold
 
+import android.os.Looper
 import com.vander.scaffold.ui.ActivityHierarchyServer
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +26,10 @@ abstract class BaseApp : DaggerApplication() {
       activityHierarchyServer.forEach { addServer(it) }
       addServer(Injector)
     })
+  }
 
+  fun setupRx() {
     RxJavaPlugins.setErrorHandler { Timber.e(it, "Uncaught RxJava error") }
+    RxAndroidPlugins.initMainThreadScheduler { AndroidSchedulers.from(Looper.getMainLooper(), true) }
   }
 }
