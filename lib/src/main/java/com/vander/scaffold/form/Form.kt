@@ -6,17 +6,24 @@ import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.Event
 import io.reactivex.Observer
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 class Form {
-  var state: FormState = mutableMapOf()
+  private val state: FormState = mutableMapOf()
+  private var enabled: Map<Int, Boolean> = emptyMap()
   private var validations: Map<Int, Set<ValidateRule>> = mutableMapOf()
 
   fun subscribe(intents: FormIntents, eventObserver: Observer<Event>): Disposable =
-      intents.allChanges()
-          .doOnSubscribe { if (state.isNotEmpty()) eventObserver.onNext(FormEventInit(state.toMap())) }
-          .doOnNext { (state as MutableMap)[it.first] = it.second }
-          .subscribe()
+      CompositeDisposable().apply {
+        addAll(
+            intents.allChanges()
+                .doOnSubscribe { if (state.isNotEmpty()) eventObserver.onNext(FormEventInit(state.toMap())) }
+                .doOnNext { (state as MutableMap)[it.first] = it.second }
+                .subscribe(),
+            intents.enabledChanges().subscribe { enabled = it }
+        )
+      }
 
   fun withInputValidations(vararg validations: Validation) = this.apply { this.validations = validations.associate { it.id to it.rules } }
 
@@ -31,7 +38,7 @@ class Form {
   fun validate(eventObserver: Observer<Event>, vararg validations: Validation): Boolean {
     val errors: FormErrors = mutableMapOf()
     return (this.validations + validations.associate { it.id to it.rules })
-        .filterKeys { state.containsKey(it) }
+        .filterKeys { state.containsKey(it) && enabled[it] ?: true }
         .map { (id, rules) ->
           rules.find { !it.validate(inputText(id)) }
               .let { rule ->

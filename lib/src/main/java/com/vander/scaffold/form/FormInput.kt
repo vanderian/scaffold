@@ -3,17 +3,22 @@ package com.vander.scaffold.form
 import android.support.design.widget.TextInputLayout
 import android.widget.CheckBox
 import android.widget.Spinner
+import butterknife.internal.Utils.listOf
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.vander.scaffold.form.validator.AfterTextChangedWatcher
 import com.vander.scaffold.screen.Screen
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
+import java.util.Collections.emptyList
+import java.util.Collections.emptyMap
 
 class FormInput {
   private var inputLayouts: List<TextInputLayout> = emptyList()
   private var spinners: List<Spinner> = emptyList()
   private var checkBoxes: List<CheckBox> = emptyList()
+  internal val enabled: BehaviorSubject<Map<Int, Boolean>> = BehaviorSubject.createDefault(emptyMap())
   private var restore = true
     get() = field.also { field = false }
 
@@ -41,6 +46,8 @@ class FormInput {
     inputLayouts.forEach { input -> input.error = errors[input.id]?.let { input.context.getString(it) } }
   }
 
+  fun validationEnabled(view: TextInputLayout, enabled: Boolean) = this.enabled.onNext(this.enabled.value!! + (view.id to enabled))
+
   fun withTextInputs(vararg inputs: TextInputLayout): FormInput = this.apply {
     inputLayouts = inputs.toList()
     check(inputLayouts.all { it.editText != null })
@@ -55,14 +62,14 @@ class FormInput {
     this.checkBoxes = checkBoxes.toList()
   }
 
-  val inputChanges: Observable<Pair<Int, String>> by lazy {
+  internal val inputChanges by lazy<Observable<Pair<Int, String>>> {
     Observable.merge(inputLayouts.map { v -> v.editText!!.afterTextChangeEvents().map { v.id to it.editable().toString() } }).share()
   }
 
-  val spinnerChanges: Observable<Pair<Int, Int>> by lazy {
+  internal val spinnerChanges by lazy<Observable<Pair<Int, Int>>> {
     Observable.merge(spinners.map { v -> v.itemSelections().map { v.id to it } }).share()
   }
-  val checkBoxChanges: Observable<Pair<Int, Boolean>> by lazy {
+  internal val checkBoxChanges by lazy<Observable<Pair<Int, Boolean>>> {
     Observable.merge(checkBoxes.map { v -> v.checkedChanges().map { v.id to it } }).share()
   }
 

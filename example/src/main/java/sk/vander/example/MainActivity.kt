@@ -86,6 +86,7 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     form = FormInput().withTextInputs(input_first, input_second)
+    form.validationEnabled(input_second, false)
   }
 
   override fun intents(): FooIntents = object : FooIntents {

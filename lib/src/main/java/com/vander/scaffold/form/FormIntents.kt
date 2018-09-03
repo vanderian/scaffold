@@ -6,6 +6,7 @@ import io.reactivex.Observable
 interface FormIntents : Screen.Intents {
 
   val form: FormInput
+  fun enabledChanges(): Observable<Map<Int, Boolean>> = form.enabled
   fun inputsTextChanges(): Observable<Pair<Int, String>> = form.inputChanges
   fun spinnersSelections(): Observable<Pair<Int, Int>> = form.spinnerChanges
   fun checkBoxesChanges(): Observable<Pair<Int, Boolean>> = form.checkBoxChanges
