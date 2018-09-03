@@ -1,7 +1,6 @@
 package sk.vander.example
 
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -13,7 +12,6 @@ import com.vander.scaffold.form.FormInput
 import com.vander.scaffold.form.FormIntents
 import com.vander.scaffold.form.validator.EmailRule
 import com.vander.scaffold.form.validator.NotEmptyRule
-import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
@@ -22,7 +20,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
-import sk.vander.example.R.id.submit
 import java.util.concurrent.Callable
 import javax.inject.Inject
 
@@ -86,6 +83,8 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     form = FormInput().withTextInputs(input_first, input_second)
+    input_first.visibility = View.GONE
+    form.validationEnabled(input_first, false)
   }
 
   override fun intents(): FooIntents = object : FooIntents {

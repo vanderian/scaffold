@@ -15,23 +15,24 @@ class Form {
   fun subscribe(intents: FormIntents, eventObserver: Observer<Event>): Disposable =
       intents.allChanges()
           .doOnSubscribe { if (state.isNotEmpty()) eventObserver.onNext(FormEventInit(state.toMap())) }
-          .doOnNext { (state as MutableMap)[it.first] = it.second }
+          .doOnNext { (state as MutableMap)[it.id] = it }
           .subscribe()
 
   fun withInputValidations(vararg validations: Validation) = this.apply { this.validations = validations.associate { it.id to it.rules } }
 
   fun init(@IdRes id: Int, value: Any) {
-    if (!state.containsKey(id)) (state as MutableMap)[id] = value
+    if (!state.containsKey(id)) (state as MutableMap)[id] = ViewState(id, value, true)
   }
 
-  fun spinnerSelection(@IdRes id: Int): Int = state[id] as Int? ?: throw IllegalArgumentException()
-  fun inputText(@IdRes id: Int): String = state[id] as String? ?: throw IllegalArgumentException()
-  fun checkBoxChecked(@IdRes id: Int): Boolean = state[id] as Boolean? ?: throw IllegalArgumentException()
+  fun spinnerSelection(@IdRes id: Int): Int = state[id]?.value as Int? ?: throw IllegalArgumentException()
+  fun inputText(@IdRes id: Int): String = state[id]?.value as String? ?: throw IllegalArgumentException()
+  fun checkBoxChecked(@IdRes id: Int): Boolean = state[id]?.value as Boolean? ?: throw IllegalArgumentException()
+  fun enabled(@IdRes id: Int): Boolean = state[id]?.enabled ?: throw IllegalArgumentException()
 
   fun validate(eventObserver: Observer<Event>, vararg validations: Validation): Boolean {
     val errors: FormErrors = mutableMapOf()
     return (this.validations + validations.associate { it.id to it.rules })
-        .filterKeys { state.containsKey(it) }
+        .filterKeys { state.containsKey(it) && enabled(it) }
         .map { (id, rules) ->
           rules.find { !it.validate(inputText(id)) }
               .let { rule ->

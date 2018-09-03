@@ -6,11 +6,11 @@ import io.reactivex.Observable
 interface FormIntents : Screen.Intents {
 
   val form: FormInput
-  fun inputsTextChanges(): Observable<Pair<Int, String>> = form.inputChanges
-  fun spinnersSelections(): Observable<Pair<Int, Int>> = form.spinnerChanges
-  fun checkBoxesChanges(): Observable<Pair<Int, Boolean>> = form.checkBoxChanges
-  fun allChanges(): Observable<Pair<Int, Any>> = Observable.merge(inputsTextChanges(), spinnersSelections(), checkBoxesChanges())
-  fun inputTextChanges(id: Int): Observable<Pair<Int, String>> = inputsTextChanges().filter { it.first == id }
-  fun spinnerSelections(id: Int): Observable<Pair<Int, Int>> = spinnersSelections().filter { it.first == id }
-  fun checkBoxChanges(id: Int): Observable<Pair<Int, Boolean>> = checkBoxesChanges().filter { it.first == id }
+  fun inputsTextChanges(): Observable<ViewState<String>> = form.inputChanges
+  fun spinnersSelections(): Observable<ViewState<Int>> = form.spinnerChanges
+  fun checkBoxesChanges(): Observable<ViewState<Boolean>> = form.checkBoxChanges
+  fun allChanges(): Observable<ViewState<*>> = Observable.merge(inputsTextChanges(), spinnersSelections(), checkBoxesChanges())
+  fun inputTextChanges(id: Int): Observable<ViewState<String>> = inputsTextChanges().filter { it.id == id }
+  fun spinnerSelections(id: Int): Observable<ViewState<Int>> = spinnersSelections().filter { it.id == id }
+  fun checkBoxChanges(id: Int): Observable<ViewState<Boolean>> = checkBoxesChanges().filter { it.id == id }
 }
