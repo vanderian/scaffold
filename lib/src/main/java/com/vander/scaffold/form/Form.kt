@@ -1,88 +1,45 @@
 package com.vander.scaffold.form
 
-import android.support.design.widget.TextInputLayout
-import android.text.Editable
-import android.view.View
-import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
-import com.vander.scaffold.form.validator.AfterTextChangedWatcher
+import android.support.annotation.IdRes
+import com.vander.scaffold.debug.log
 import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
-import com.vander.scaffold.form.validator.Validator
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.concurrent.TimeUnit
+import com.vander.scaffold.screen.Event
+import io.reactivex.Observer
+import io.reactivex.disposables.Disposable
 
-typealias FormData = Map<Int, Editable>
-typealias FormResult = Pair<Boolean, Map<Int, Editable>>
+class Form {
+  var state: FormState = mutableMapOf()
+  private var validations: Map<Int, Set<ValidateRule>> = mutableMapOf()
 
-class Form : Validator {
-  private val state: MutableMap<Int, Editable> = mutableMapOf()
-  private lateinit var items: Map<TextInputLayout, Set<ValidateRule>>
+  fun subscribe(intents: FormIntents, eventObserver: Observer<Event>): Disposable =
+      intents.allChanges()
+          .doOnSubscribe { if (state.isNotEmpty()) eventObserver.onNext(FormEventInit(state.toMap())) }
+          .doOnNext { (state as MutableMap)[it.first] = it.second }
+          .subscribe()
 
-  private fun TextInputLayout.clearErrorAfterChange() {
-    editText?.addTextChangedListener(AfterTextChangedWatcher({ isErrorEnabled = false }))
+  fun withInputValidations(vararg validations: Validation) = this.apply { this.validations = validations.associate { it.id to it.rules } }
+
+  fun init(@IdRes id: Int, value: Any) {
+    if (!state.containsKey(id)) (state as MutableMap)[id] = value
   }
 
-  private fun TextInputLayout.validate(vararg rules: ValidateRule): Boolean =
-      if (visibility != View.VISIBLE) true else
-        rules.find { !it.validate(editText?.text.toString()) }
-            .let {
-              error = it?.let {
-                if (it.errorRes != -1) context.getString(it.errorRes)
-                else it.errorMessage.invoke(editText?.text.toString())
+  fun spinnerSelection(@IdRes id: Int): Int = state[id] as Int? ?: throw IllegalArgumentException()
+  fun inputText(@IdRes id: Int): String = state[id] as String? ?: throw IllegalArgumentException()
+  fun checkBoxChecked(@IdRes id: Int): Boolean = state[id] as Boolean? ?: throw IllegalArgumentException()
+
+  fun validate(eventObserver: Observer<Event>, vararg validations: Validation): Boolean {
+    val errors: FormErrors = mutableMapOf()
+    return (this.validations + validations.associate { it.id to it.rules })
+        .filterKeys { state.containsKey(it) }
+        .map { (id, rules) ->
+          rules.find { !it.validate(inputText(id)) }
+              .let { rule ->
+                rule?.let { (errors as MutableMap)[id] = it.errorRes }
+                rule == null
               }
-              it == null
-            }
-
-  private fun Map<TextInputLayout, Set<ValidateRule>>.validate(): Single<FormResult> =
-      map { (input, rules) -> input.validate(*rules.toTypedArray()) }
-          .find { !it }
-          .let { Single.just(FormResult(it == null, state.toMap())) }
-
-  private fun init(vararg validations: Validation) {
-    check(validations.all { it.input.editText != null })
-    validations.forEach { it.input.clearErrorAfterChange() }
-    items = validations.associate { it.input to it.rules }
-  }
-
-  override fun validate(): Single<FormResult> = items.validate()
-
-  fun with(vararg validations: Validation) = object : Validator {
-    override fun validate(): Single<FormResult> {
-      val map = items.toMutableMap()
-      validations.forEach {
-        if (map.containsKey(it.input)) {
-          map[it.input] = map[it.input]!!.plus(it.rules)
-        } else {
-          map[it.input] = it.rules
         }
-      }
-      return map.validate()
-    }
+        .all { it }
+        .also { eventObserver.onNext(FormEventError(errors)) }
   }
-
-  fun state(): Observable<FormData> =
-      items.map { (input, _) -> input.editText!!.afterTextChangeEvents().skipInitialValue().map { input.id to it.editable()!! } }
-          .let { Observable.merge(it) }
-          .debounce(300, TimeUnit.MILLISECONDS)
-          .observeOn(AndroidSchedulers.mainThread())
-          .filter { (id, editable) -> state[id].toString() != editable.toString() }
-          .doOnNext { (id, editable) -> if (editable.isBlank()) state.remove(id) else state[id] = editable }
-          .map { state.toMap() }
-
-  fun restore(formData: FormData) {
-    if (state.isEmpty()) {
-      state.putAll(formData)
-      items.map { it.key.apply { error = null } }.filter { state.containsKey(it.id) }.forEach {
-        it.editText!!.text = state[it.id]
-        it.editText!!.apply { setSelection(length()) }
-      }
-    }
-  }
-
-  companion object {
-    fun init(vararg validations: Validation) = Form().apply { init(*validations) }
-  }
-
 }

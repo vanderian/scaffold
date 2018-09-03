@@ -1,10 +1,10 @@
 package com.vander.scaffold.form.validator
 
-import android.support.design.widget.TextInputLayout
+import android.support.annotation.IdRes
 
 data class Validation(
-    val input: TextInputLayout,
+    @IdRes val id: Int,
     val rules: LinkedHashSet<ValidateRule>
 ) {
-  constructor(input: TextInputLayout, vararg rules: ValidateRule) : this(input, linkedSetOf(*rules))
+  constructor(@IdRes id: Int, vararg rules: ValidateRule) : this(id, linkedSetOf(*rules))
 }

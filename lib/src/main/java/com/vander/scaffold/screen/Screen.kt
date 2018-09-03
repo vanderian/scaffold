@@ -149,7 +149,6 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   companion object {
     const val ARG_OBJ = "arg_object"
     const val ARG_ID = "arg_id"
-    const val JSON_EXTRA = "json_extra"
 
     fun <T : Parcelable> getArgument(args: Bundle): T = args.getParcelable(ARG_OBJ)
     fun getId(args: Bundle): Long = args.getLong(ARG_ID)
