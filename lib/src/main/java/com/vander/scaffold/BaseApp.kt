@@ -30,6 +30,6 @@ abstract class BaseApp : DaggerApplication() {
 
   fun setupRx() {
     RxJavaPlugins.setErrorHandler { Timber.e(it, "Uncaught RxJava error") }
-    RxAndroidPlugins.initMainThreadScheduler { AndroidSchedulers.from(Looper.getMainLooper(), true) }
+    RxAndroidPlugins.setInitMainThreadSchedulerHandler { AndroidSchedulers.from(Looper.getMainLooper(), true) }
   }
 }

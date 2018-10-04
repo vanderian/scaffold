@@ -6,8 +6,6 @@ import autodagger.AutoInjector
 import com.vander.scaffold.BaseApp
 import com.vander.scaffold.BaseAppModule
 import com.vander.scaffold.annotations.*
-import com.vander.scaffold.screen.Coordinator
-import com.vander.scaffold.screen.CoordinatorModule
 import com.vander.scaffold.ui.ViewContainer
 import dagger.Binds
 import dagger.Module
@@ -37,14 +35,11 @@ object AppModule {
 
   @Module
   abstract class Ui {
-    @ActivityScope @ContributesAndroidInjector(modules = [CoordinatorModule::class, Screens::class])
+    @ActivityScope @ContributesAndroidInjector(modules = [Screens::class])
     abstract fun contributeMainActivity(): MainActivity
 
     @Binds @IntoMap @ViewModelKey(FooModel::class)
     abstract fun provideFooModel(viewModel: FooModel): ViewModel
-
-    @Binds @IntoMap @ClassKeyCoordinator(FooCoordinator::class)
-    abstract fun provideFooCoordinator(coordinator: FooCoordinator): Coordinator
   }
 
   @Module

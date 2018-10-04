@@ -3,7 +3,6 @@ package com.vander.scaffold.form
 import android.support.design.widget.TextInputLayout
 import android.widget.CheckBox
 import android.widget.Spinner
-import butterknife.internal.Utils.listOf
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import com.jakewharton.rxbinding2.widget.checkedChanges
 import com.jakewharton.rxbinding2.widget.itemSelections

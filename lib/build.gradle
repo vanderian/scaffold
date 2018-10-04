@@ -19,7 +19,6 @@ dependencies {
     implementation deps.design
 //    implementation deps.calligraphy
 
-    api deps.butterknife
     api deps.recyclerview
     api deps.rxjava
     api deps.rxjava_android

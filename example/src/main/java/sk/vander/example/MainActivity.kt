@@ -1,19 +1,15 @@
 package sk.vander.example
 
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import butterknife.BindView
 import com.jakewharton.rxbinding2.view.clicks
 import com.vander.scaffold.form.Form
 import com.vander.scaffold.form.FormInput
 import com.vander.scaffold.form.FormIntents
 import com.vander.scaffold.form.validator.EmailRule
 import com.vander.scaffold.form.validator.NotEmptyRule
-import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
@@ -22,7 +18,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
-import sk.vander.example.R.id.submit
 import java.util.concurrent.Callable
 import javax.inject.Inject
 
@@ -72,12 +67,10 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
 }
 
 class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
-  @BindView(R.id.text) lateinit var text: TextView
-  @BindView(R.id.view_complex) lateinit var complex: View
   private lateinit var form: FormInput
 
   private val coordinator
-    get() = complex.getCoordinator() as FooCoordinator
+    get() = view_complex.getCoordinator() as FooCoordinator
 
   lateinit var onBack: Callable<Boolean>
 
@@ -104,10 +97,11 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
 }
 
 class FooCoordinator @Inject constructor() : Coordinator() {
-  @BindView(R.id.submit) lateinit var submit: Button
+  lateinit var submit: Button
 
   override fun attach(view: View) {
     super.attach(view)
+    submit = view.findViewById(R.id.submit)
     Toast.makeText(view.context, "attach", Toast.LENGTH_SHORT).show()
   }
 

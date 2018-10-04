@@ -12,8 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.vander.scaffold.Injectable
 import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
@@ -38,7 +36,6 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   }
 
   private var result = BehaviorSubject.create<Result>()
-  private lateinit var unbind: Unbinder
   private lateinit var model: ScreenModel<U, V>
   private val onEvent: PublishSubject<Event> = PublishSubject.create()
   private val disposable = CompositeDisposable()
@@ -108,16 +105,11 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
       inflater.inflate(layout(), container, false)
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    unbind = ButterKnife.bind(this, view)
-  }
-
   override fun onStart() {
     super.onStart()
     disposable.addAll(
-        model.state.log("screen state").subscribe { render(it) },
-        model.event.log("screen event").subscribe {
+        model.state.log("screen state").observeOn(AndroidSchedulers.mainThread()).subscribe { render(it) },
+        model.event.log("screen event").observeOn(AndroidSchedulers.mainThread()).subscribe {
           when (it) {
             is Navigation -> navigate(it)
             is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()

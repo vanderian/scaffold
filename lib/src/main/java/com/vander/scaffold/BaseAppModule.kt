@@ -9,7 +9,6 @@ import com.vander.scaffold.ui.ActivityHierarchyServer
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
-import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.AndroidSupportInjectionModule
 import dagger.multibindings.ElementsIntoSet
 

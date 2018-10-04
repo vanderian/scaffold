@@ -2,7 +2,6 @@ package com.vander.scaffold.screen
 
 import android.app.Activity
 import android.content.Intent
-import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem

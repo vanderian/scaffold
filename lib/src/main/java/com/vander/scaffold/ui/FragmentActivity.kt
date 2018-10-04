@@ -12,7 +12,6 @@ import com.vander.scaffold.screen.CoordinatorProvider
 import com.vander.scaffold.screen.Coordinators
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
@@ -37,9 +36,7 @@ abstract class FragmentActivity : AppCompatActivity(), HasSupportFragmentInjecto
         Coordinators.remove(child)
       }
     }))
-    val frame = FrameLayout(this)
-    frame.id = R.id.container_id
-    container.addView(frame)
+    container.addView(FrameLayout(this).apply { id = R.id.container_id })
   }
 
   override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
