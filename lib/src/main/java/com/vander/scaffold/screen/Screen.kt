@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.vander.scaffold.Injectable
 import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
+import com.vander.scaffold.switchToMainIfOther
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,8 +46,6 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   val state: U
     get() = model.stateValue
 
-  protected open val composeState: ObservableTransformer<U, U> = ObservableTransformer { it }
-  protected open val composeEvent: ObservableTransformer<Event, Event> = ObservableTransformer { it }
   @LayoutRes abstract fun layout(): Int
   abstract fun intents(): V
   abstract fun render(state: U)
@@ -111,8 +110,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   override fun onStart() {
     super.onStart()
     disposable.addAll(
-        model.state.log("screen state").compose(composeState).subscribe { render(it) },
-        model.event.log("screen event").compose(composeEvent).subscribe {
+        model.state.log("screen state").switchToMainIfOther().subscribe { render(it) },
+        model.event.log("screen event").switchToMainIfOther().subscribe {
           when (it) {
             is Navigation -> navigate(it)
             is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()
