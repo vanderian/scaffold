@@ -16,6 +16,7 @@ import com.vander.scaffold.Injectable
 import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
@@ -42,8 +43,10 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
 
   val state: U
-    get() = model.state.value!!
+    get() = model.stateValue
 
+  protected open val composeState: ObservableTransformer<U, U> = ObservableTransformer { it }
+  protected open val composeEvent: ObservableTransformer<Event, Event> = ObservableTransformer { it }
   @LayoutRes abstract fun layout(): Int
   abstract fun intents(): V
   abstract fun render(state: U)
@@ -75,7 +78,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
       is NextChildScreen -> {
         childFragmentManager.beginTransaction()
             .replace(navigation.id, navigation.screen)
-            .addToBackStack("")
+//            .addToBackStack("")
             .commit()
       }
       is NextActivity -> checkStartFinish(navigation.intent, navigation.finish)
@@ -108,8 +111,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   override fun onStart() {
     super.onStart()
     disposable.addAll(
-        model.state.log("screen state").observeOn(AndroidSchedulers.mainThread()).subscribe { render(it) },
-        model.event.log("screen event").observeOn(AndroidSchedulers.mainThread()).subscribe {
+        model.state.log("screen state").compose(composeState).subscribe { render(it) },
+        model.event.log("screen event").compose(composeEvent).subscribe {
           when (it) {
             is Navigation -> navigate(it)
             is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()
