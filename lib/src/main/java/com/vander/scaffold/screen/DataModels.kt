@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxbinding2.support.v7.widget.itemClicks
 import com.jakewharton.rxbinding2.support.v7.widget.navigationClicks
@@ -27,14 +28,14 @@ sealed class NavEvent : Event
 
 object None : NavEvent()
 object GoBack : NavEvent()
-class NextScreen(val screen: Screen<*, *>, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
-class NextChildScreen(val screen: Screen<*, *>, val id: Int = R.id.child_container_id) : NavEvent()
-class NextScreenResult(val screen: Screen<*, *>, val requestCode: Int, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
-class NextActivity(val intent: Intent, val finish: Boolean = false) : NavEvent()
-class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
-class WithResult(val intent: Intent, val requestCode: Int = 0) : NavEvent()
-class WithResultExplicit(val clazz: KClass<out Activity>, val requestCode: Int = 0, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
-class NavDirection(val action: Int, val args: Bundle? = null, val navOptions: NavOptions? = null) : NavEvent()
+data class NextScreen(val screen: Screen<*, *>, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
+data class NextChildScreen(val screen: Screen<*, *>, val id: Int = R.id.child_container_id) : NavEvent()
+data class NextScreenResult(val screen: Screen<*, *>, val requestCode: Int, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
+data class NextActivity(val intent: Intent, val finish: Boolean = false) : NavEvent()
+data class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
+data class WithResult(val intent: Intent, val requestCode: Int = 0) : NavEvent()
+data class WithResultExplicit(val clazz: KClass<out Activity>, val requestCode: Int = 0, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
+data class NavDirection(val action: Int, val args: Bundle? = null, val navOptions: NavOptions? = null, val extras: Navigator.Extras? = null) : NavEvent()
 
 data class ToastEvent(val msgRes: Int = -1, val msg: String = "", val length: Int = Toast.LENGTH_SHORT) : Event
 interface Notification : Event

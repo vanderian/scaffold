@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.vander.scaffold.Injectable
 import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
@@ -82,6 +83,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
       is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), navigation.finish)
       is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
       is WithResultExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), code = navigation.requestCode, withResult = true)
+      is NavDirection -> findNavController().navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
     }
   }
 
