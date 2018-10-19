@@ -69,59 +69,59 @@ interface ActivityHierarchyServer : Application.ActivityLifecycleCallbacks {
   }
 
   class FragmentLifeCycleDebug : FragmentManager.FragmentLifecycleCallbacks() {
-    override fun onFragmentViewCreated(fm: FragmentManager?, f: Fragment?, v: View?, savedInstanceState: Bundle?) {
+    override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
       Timber.d("onFragmentViewCreated $f $v $savedInstanceState")
     }
 
-    override fun onFragmentStopped(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentStopped(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentStopped $f")
     }
 
-    override fun onFragmentCreated(fm: FragmentManager?, f: Fragment?, savedInstanceState: Bundle?) {
+    override fun onFragmentCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
       Timber.d("onFragmentCreated $f $savedInstanceState")
     }
 
-    override fun onFragmentResumed(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentResumed $f")
     }
 
-    override fun onFragmentAttached(fm: FragmentManager?, f: Fragment?, context: Context?) {
+    override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
       Timber.d("onFragmentAttached $f $context")
     }
 
-    override fun onFragmentPreAttached(fm: FragmentManager?, f: Fragment?, context: Context?) {
+    override fun onFragmentPreAttached(fm: FragmentManager, f: Fragment, context: Context) {
       Timber.d("onFragmentPreAttached $f $context")
     }
 
-    override fun onFragmentDestroyed(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentDestroyed $f")
     }
 
-    override fun onFragmentSaveInstanceState(fm: FragmentManager?, f: Fragment?, outState: Bundle?) {
+    override fun onFragmentSaveInstanceState(fm: FragmentManager, f: Fragment, outState: Bundle) {
       Timber.d("onFragmentSaveInstanceState $f")
     }
 
-    override fun onFragmentStarted(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentStarted $f")
     }
 
-    override fun onFragmentViewDestroyed(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentViewDestroyed $f")
     }
 
-    override fun onFragmentPreCreated(fm: FragmentManager?, f: Fragment?, savedInstanceState: Bundle?) {
+    override fun onFragmentPreCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
       Timber.d("onFragmentPreCreated $f")
     }
 
-    override fun onFragmentActivityCreated(fm: FragmentManager?, f: Fragment?, savedInstanceState: Bundle?) {
+    override fun onFragmentActivityCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
       Timber.d("onFragmentActivityCreated $f")
     }
 
-    override fun onFragmentPaused(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentPaused(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentPaused $f")
     }
 
-    override fun onFragmentDetached(fm: FragmentManager?, f: Fragment?) {
+    override fun onFragmentDetached(fm: FragmentManager, f: Fragment) {
       Timber.d("onFragmentDetached $f")
     }
   }

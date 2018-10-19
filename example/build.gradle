@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'kotlin-android-extensions'
 
-android {
-    compileSdkVersion 28
+apply from: rootProject.file("gradle/compile.gradle")
+apply from: rootProject.file("gradle/android.gradle")
 
+android {
     defaultConfig {
         applicationId "sk.vander.example"
-        minSdkVersion 15
-        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -27,7 +27,6 @@ android {
             }
         }
     }
-
 }
 
 androidExtensions {

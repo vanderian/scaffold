@@ -40,4 +40,9 @@ android {
 			"NewerVersionAvailable",
 			"PropertyEscape"                // CI issue with sdk.dir in local.properties
 	}
+
+	compileOptions {
+		sourceCompatibility 1.8
+		targetCompatibility 1.8
+	}
 }

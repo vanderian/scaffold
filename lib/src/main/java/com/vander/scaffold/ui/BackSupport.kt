@@ -5,5 +5,5 @@ interface HandlesBack {
 }
 
 object BackSupport {
-  fun handlesBack(any: Any) = (any as? HandlesBack)?.onBackPressed() ?: false
+  fun handlesBack(any: Any?) = (any as? HandlesBack)?.onBackPressed() ?: false
 }
