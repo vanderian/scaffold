@@ -17,8 +17,6 @@ import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
 import com.vander.scaffold.switchToMainIfOther
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -60,7 +58,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     if (finish) activity?.finish()
   }
 
-  private fun navigate(navigation: Navigation) {
+  private fun navigate(navigation: NavEvent) {
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
       is NextScreen -> (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
@@ -113,7 +111,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
         model.state.log("screen state").switchToMainIfOther().subscribe { render(it) },
         model.event.log("screen event").switchToMainIfOther().subscribe {
           when (it) {
-            is Navigation -> navigate(it)
+            is NavEvent -> navigate(it)
             is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()
             else -> onEvent.onNext(it)
           }

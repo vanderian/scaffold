@@ -29,6 +29,8 @@ dependencies {
     implementation deps.rxbindings_support_kt
 
     api deps.lifecycle_ext
+    api deps.navigation_fragment
+    api deps.navigation_ui
 
     api deps.dagger
     api deps.dagger_android

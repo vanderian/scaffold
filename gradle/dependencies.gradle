@@ -1,5 +1,6 @@
-def support_version = '27.1.1'
+def support_version = '28.0.0'
 def arch_version = '1.1.1'
+def nav_version = "1.0.0-alpha06"
 ext.deps = [
         appcompat_v7                : "com.android.support:appcompat-v7:$support_version",
         support_v4                  : "com.android.support:support-v4:$support_version",
@@ -18,6 +19,8 @@ ext.deps = [
         room_compiler               : "android.arch.persistence.room:compiler:$arch_version",
         room_rx                     : "android.arch.persistence.room:rxjava2:$arch_version",
         ktx                         : "androidx.core:core-ktx:0.1",
+        navigation_fragment         : "android.arch.navigation:navigation-fragment-ktx:$nav_version",
+        navigation_ui               : "android.arch.navigation:navigation-ui-ktx:$nav_version",
 
         kotlin                      : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
         kotlin_jre7                 : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version",
@@ -97,8 +100,8 @@ ext.deps = [
         argon                       : 'de.mkammerer:argon2-jvm:2.4',
 
         junit                       : 'junit:junit:4.12',
-        espresso                    : 'com.android.support.test.espresso:espresso-core:3.0.1',
-        espresso_contrib            : 'com.android.support.test.espresso:espresso-contrib:3.0.1',
+        espresso                    : 'com.android.support.test.espresso:espresso-core:3.0.2',
+        espresso_contrib            : 'com.android.support.test.espresso:espresso-contrib:3.0.2',
         test_runner                 : 'com.android.support.test:runner:0.5',
         test_rules                  : 'com.android.support.test:rules:0.5',
         mockito                     : 'org.mockito:mockito-android:2.8.47',
@@ -119,17 +122,17 @@ ext.deps = [
         junit_platform              : 'org.junit.platform:junit-platform-runner:1.0.0',
         junit5_runtime              : 'de.mannodermaus.gradle.plugins:android-junit5-embedded-runtime:1.0.0-RC3-rev1',
 
-        rxbindings                  : 'com.jakewharton.rxbinding2:rxbinding:2.1.1',
-        rxbindings_kt               : 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1',
-        rxbindings_support          : 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.1.1',
-        rxbindings_support_kt       : 'com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.1.1',
-        rxbindings_appcompat        : 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1',
-        rxbindings_appcompat_kt     : 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.1.1',
-        rxbindings_design           : 'com.jakewharton.rxbinding2:rxbinding-design:2.1.1',
-        rxbindings_design_kt        : 'com.jakewharton.rxbinding2:rxbinding-design-kotlin:2.1.1',
-        rxbindings_recyclerview     : 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.1.1',
-        rxbindings_recyclerview_kt  : 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:2.1.1',
-        rxjava                      : 'io.reactivex.rxjava2:rxjava:2.2.1',
+        rxbindings                  : 'com.jakewharton.rxbinding2:rxbinding:2.2.0',
+        rxbindings_kt               : 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.2.0',
+        rxbindings_support          : 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.2.0',
+        rxbindings_support_kt       : 'com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.2.0',
+        rxbindings_appcompat        : 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.2.0',
+        rxbindings_appcompat_kt     : 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.2.0',
+        rxbindings_design           : 'com.jakewharton.rxbinding2:rxbinding-design:2.2.0',
+        rxbindings_design_kt        : 'com.jakewharton.rxbinding2:rxbinding-design-kotlin:2.2.0',
+        rxbindings_recyclerview     : 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.2.0',
+        rxbindings_recyclerview_kt  : 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:2.2.0',
+        rxjava                      : 'io.reactivex.rxjava2:rxjava:2.2.2',
         rxjava_android              : 'io.reactivex.rxjava2:rxandroid:2.1.0',
         rxjava_interop              : 'com.github.akarnokd:rxjava2-interop:0.10.1',
         rx_pref                     : 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2',
