@@ -5,10 +5,8 @@ import autodagger.AutoComponent
 import autodagger.AutoInjector
 import com.vander.scaffold.BaseApp
 import com.vander.scaffold.BaseAppModule
-import com.vander.scaffold.annotations.ActivityScope
-import com.vander.scaffold.annotations.ApplicationScope
-import com.vander.scaffold.annotations.ScreenScope
-import com.vander.scaffold.annotations.ViewModelKey
+import com.vander.scaffold.annotations.*
+import com.vander.scaffold.screen.Coordinator
 import com.vander.scaffold.screen.CoordinatorModule
 import com.vander.scaffold.ui.ViewContainer
 import dagger.Binds
@@ -44,6 +42,9 @@ object AppModule {
 
     @Binds @IntoMap @ViewModelKey(FooModel::class)
     abstract fun provideFooModel(viewModel: FooModel): ViewModel
+
+    @Binds @IntoMap @ClassKeyCoordinator(FooCoordinator::class)
+    abstract fun provideFooCoordinator(coordinator: FooCoordinator): Coordinator
   }
 
   @Module
