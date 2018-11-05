@@ -42,7 +42,12 @@ class FormInput {
   }
 
   private fun setErrors(errors: FormErrors) {
-    inputLayouts.forEach { input -> input.error = errors[input.id]?.let { input.context.getString(it) } }
+    inputLayouts.forEach { input -> input.error = errors[input.id]?.let { (errorRes, params) ->
+      if (params != null)
+        input.context.getString(errorRes, *params)
+      else
+        input.context.getString(errorRes)
+    } }
   }
 
   fun validationEnabled(view: TextInputLayout, enabled: Boolean) = this.enabled.onNext(this.enabled.value!! + (view.id to enabled))

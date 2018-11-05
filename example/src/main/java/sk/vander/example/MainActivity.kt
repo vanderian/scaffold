@@ -10,6 +10,7 @@ import com.vander.scaffold.form.FormInput
 import com.vander.scaffold.form.FormIntents
 import com.vander.scaffold.form.validator.EmailRule
 import com.vander.scaffold.form.validator.NotEmptyRule
+import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.*
 import com.vander.scaffold.ui.FragmentActivity
@@ -23,6 +24,18 @@ import javax.inject.Inject
 
 val iter: Int = 0
   get() = field++
+
+class MinLengthRule : ValidateRule() {
+  private val minLength = 3
+
+  override val errorRes: Int
+    get() = R.string.error_min_length
+
+  override val errorMessageParams: Array<out Any>?
+    get() = arrayOf(minLength)
+
+  override fun validate(text: String): Boolean = text.length >= minLength
+}
 
 class MainActivity : FragmentActivity() {
 
@@ -48,7 +61,8 @@ interface FooIntents : FormIntents {
 class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
   val form = Form().withInputValidations(
       Validation(R.id.input_first, NotEmptyRule(R.string.error_empty), EmailRule(R.string.error_email)),
-      Validation(R.id.input_second, NotEmptyRule(R.string.error_empty))
+      Validation(R.id.input_second, NotEmptyRule(R.string.error_empty)),
+      Validation(R.id.input_third, NotEmptyRule(R.string.error_empty), MinLengthRule())
   )
 
   override fun collectIntents(intents: FooIntents, result: Observable<Result>): Disposable {
@@ -78,7 +92,7 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    form = FormInput().withTextInputs(input_first, input_second)
+    form = FormInput().withTextInputs(input_first, input_second, input_third)
     form.validationEnabled(input_second, false)
   }
 
