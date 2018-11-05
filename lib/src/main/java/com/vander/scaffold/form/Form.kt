@@ -41,7 +41,7 @@ class Form {
         .map { (id, rules) ->
           rules.find { !it.validate(inputText(id)) }
               .let { rule ->
-                rule?.let { (errors as MutableMap)[id] = it.errorRes }
+                rule?.let { (errors as MutableMap)[id] = it.errorRes to it.errorMessageParams }
                 rule == null
               }
         }
