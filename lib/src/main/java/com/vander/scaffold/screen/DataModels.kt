@@ -61,6 +61,11 @@ interface ListIntents<T : AdapterModel, R> : Screen.Intents {
   fun onItem(): Observable<R> = adapter.itemEventSource.toObservable()
 }
 
+interface PageListIntents<T : AdapterModel, R> : ListIntents<T, R> {
+  fun loadMore(): Observable<Unit>
+  fun retryPage(): Observable<Unit>
+}
+
 interface BackIntent : Screen.Intents {
   val toolbar: Toolbar
   fun back(): Observable<Unit> = toolbar.navigationClicks()
