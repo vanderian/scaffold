@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">lib</string>
     <string name="no_app_error">There is no application to take handle of %1$s action.</string>
+    <string name="action_retry">Retry</string>
 </resources>
