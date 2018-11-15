@@ -22,8 +22,13 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
   @Inject lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
   private lateinit var container: ViewGroup
 
+  protected val navController
+    get() = findNavController(R.id.navHostDefault)
+
   @LayoutRes open val layoutId = 0
   @NavigationRes open val graphId = 0
+
+  open fun graph() = navController.navInflater.inflate(graphId)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -34,8 +39,7 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
     if (layoutId == 0) {
       check(graphId != 0) { "graphId must be set if no custom layout is provided" }
       inflater.inflate(R.layout.layout_nav_host, container, true)
-      val navController = findNavController(R.id.navHostDefault)
-      navController.graph = navController.navInflater.inflate(graphId)
+      navController.graph = graph()
     } else {
       inflater.inflate(layoutId, container, true)
     }

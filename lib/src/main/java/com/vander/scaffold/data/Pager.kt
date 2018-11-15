@@ -29,7 +29,7 @@ class Pager<I, O> internal constructor(
    */
   fun page(source: Maybe<I>): Observable<O> = Observable.create { emitter ->
     pages = PublishSubject.create()
-    disposable = Observable.switchOnNext(pages.map { it.toObservable() }).subscribe({ result ->
+    disposable = pages.distinctUntilChanged().concatMapMaybe { it }.subscribe({ result ->
       nextPage = pagingFunction(result)
       emitter.onNext(pageTransformer(result))
       if (nextPage === FINISH_SEQUENCE) {
