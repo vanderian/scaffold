@@ -59,11 +59,14 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     if (finish) activity?.finish()
   }
 
+  private fun navHost(id: Int?) = id?.let { childFragmentManager.findFragmentById(it) ?: fragmentManager?.findFragmentById(it) }
+  private fun navController(id: Int?) = (navHost(id)?.findNavController() ?: findNavController())
+
   private fun navigate(navigation: NavEvent) {
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
-      GoUp -> findNavController().navigateUp()
-      PopStack -> findNavController().popBackStack()
+      is GoUp -> navController(navigation.navHostId).navigateUp()
+      is PopStack -> navController(navigation.navHostId).popBackStack()
       is NextScreen -> (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
           .replace(navigation.id, navigation.screen)
           .addToBackStack("")
@@ -85,13 +88,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
       is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), navigation.finish)
       is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
       is WithResultExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), code = navigation.requestCode, withResult = true)
-      is NavDirection -> {
-        val navHost = navigation.navHostId?.let {
-          childFragmentManager.findFragmentById(it) ?: fragmentManager?.findFragmentById(it)
-        }
-        (navHost?.findNavController() ?: findNavController())
-            .navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
-      }
+      is NavDirection -> navController(navigation.navHostId).navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
     }
   }
 
