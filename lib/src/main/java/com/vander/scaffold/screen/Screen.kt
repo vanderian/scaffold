@@ -62,6 +62,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   private fun navigate(navigation: NavEvent) {
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
+      GoUp -> findNavController().navigateUp()
+      PopStack -> findNavController().popBackStack()
       is NextScreen -> (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
           .replace(navigation.id, navigation.screen)
           .addToBackStack("")
@@ -140,10 +142,6 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
 
   fun result(result: Result) {
     this.result.onNext(result)
-  }
-
-  fun goBack() {
-    navigate(GoBack)
   }
 
   companion object {

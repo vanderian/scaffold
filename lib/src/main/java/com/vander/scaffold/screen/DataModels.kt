@@ -28,6 +28,8 @@ sealed class NavEvent : Event
 
 object None : NavEvent()
 object GoBack : NavEvent()
+object GoUp : NavEvent()
+object PopStack : NavEvent()
 data class NextScreen(val screen: Screen<*, *>, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
 data class NextChildScreen(val screen: Screen<*, *>, val id: Int = R.id.child_container_id) : NavEvent()
 data class NextScreenResult(val screen: Screen<*, *>, val requestCode: Int, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
