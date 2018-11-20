@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import timber.log.Timber
 import java.util.*
@@ -63,7 +64,7 @@ interface ActivityHierarchyServer : Application.ActivityLifecycleCallbacks {
     override fun onActivityStopped(p0: Activity) = Timber.d("onActivityStopped $p0")
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {
       Timber.d("onActivityCreated $p0 $p1")
-      (p0 as? FragmentActivity)?.supportFragmentManager
+      (p0 as? AppCompatActivity)?.supportFragmentManager
           ?.registerFragmentLifecycleCallbacks(FragmentLifeCycleDebug(), true)
     }
   }

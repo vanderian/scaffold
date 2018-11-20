@@ -83,7 +83,13 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
       is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), navigation.finish)
       is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
       is WithResultExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), code = navigation.requestCode, withResult = true)
-      is NavDirection -> findNavController().navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
+      is NavDirection -> {
+        val navHost = navigation.navHostId?.let {
+          childFragmentManager.findFragmentById(it) ?: fragmentManager?.findFragmentById(it)
+        }
+        (navHost?.findNavController() ?: findNavController())
+            .navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
+      }
     }
   }
 

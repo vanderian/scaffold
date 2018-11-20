@@ -35,7 +35,12 @@ data class NextActivity(val intent: Intent, val finish: Boolean = false) : NavEv
 data class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
 data class WithResult(val intent: Intent, val requestCode: Int = 0) : NavEvent()
 data class WithResultExplicit(val clazz: KClass<out Activity>, val requestCode: Int = 0, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
-data class NavDirection(val action: Int, val args: Bundle? = null, val navOptions: NavOptions? = null, val extras: Navigator.Extras? = null) : NavEvent()
+data class NavDirection(
+    val action: Int,
+    val args: Bundle? = null,
+    val navOptions: NavOptions? = null,
+    val extras: Navigator.Extras? = null,
+    val navHostId: Int? = null) : NavEvent()
 
 data class ToastEvent(val msgRes: Int = -1, val msg: String = "", val length: Int = Toast.LENGTH_SHORT) : Event
 interface Notification : Event

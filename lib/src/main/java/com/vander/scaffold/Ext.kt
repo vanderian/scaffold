@@ -12,4 +12,4 @@ fun <T> Observable<T>.switchToMainIfOther(): Observable<T> = this.flatMapSingle 
   else Single.just(it).observeOn(AndroidSchedulers.mainThread())
 }
 
-fun NavDirections.event(): NavDirection = NavDirection(this.actionId, this.arguments)
+fun NavDirections.event(navHostId: Int? = null): NavDirection = NavDirection(this.actionId, this.arguments, navHostId = navHostId)
