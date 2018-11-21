@@ -73,8 +73,8 @@ interface PageListIntents<T : AdapterModel, R> : ListIntents<T, R> {
   fun retryPage(): Observable<Unit>
 }
 
-interface BackIntent : Screen.Intents {
+interface NavigationIntent : Screen.Intents {
   val toolbar: Toolbar
-  fun back(): Observable<Unit> = toolbar.navigationClicks()
+  fun navigation(): Observable<Unit> = toolbar.navigationClicks()
 }
 
