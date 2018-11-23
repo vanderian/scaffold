@@ -5,18 +5,16 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
-import com.vander.scaffold.Injectable
-import com.vander.scaffold.R
+import com.vander.scaffold.*
 import com.vander.scaffold.debug.log
-import com.vander.scaffold.switchToMainIfOther
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
@@ -42,6 +40,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   private val disposable = CompositeDisposable()
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
 
+  protected open val hasNavController = true
+
   val state: U
     get() = model.stateValue
 
@@ -60,53 +60,38 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   }
 
   private fun navHost(id: Int?) = id?.let { childFragmentManager.findFragmentById(it) ?: fragmentManager?.findFragmentById(it) }
-  private fun navController(id: Int?) = (navHost(id)?.findNavController() ?: findNavController())
+  private fun navController(id: Int? = null) = (navHost(id)?.findNavController() ?: findNavController())
 
   private fun navigate(navigation: NavEvent) {
     when (navigation) {
       GoBack -> activity!!.onBackPressed()
-      is GoUp -> navController(navigation.navHostId).navigateUp()
-      is PopStack -> navController(navigation.navHostId).popBackStack()
-      is NextScreen -> (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
-          .replace(navigation.id, navigation.screen)
-          .addToBackStack("")
-          .commit()
-      is NextScreenResult -> {
-        navigation.screen.setTargetFragment(this, navigation.requestCode)
-        (if (navigation.fragmentsManager) fragmentManager else activity?.supportFragmentManager)!!.beginTransaction()
-            .replace(navigation.id, navigation.screen)
-            .addToBackStack("")
-            .commit()
-      }
-      is NextChildScreen -> {
-        childFragmentManager.beginTransaction()
-            .replace(navigation.id, navigation.screen)
-//            .addToBackStack("")
-            .commit()
+      is GoUp -> navController(navigation.childNavHostId).navigateUp()
+      is PopStack -> navController(navigation.childNavHostId).popBackStack()
+      is PopWithResult -> navController().run {
+        val id = currentDestination!!.id
+        popBackStack()
+        currentDestination?.addResult(Result(id, navigation.success, navigation.extras))
       }
       is NextActivity -> checkStartFinish(navigation.intent, navigation.finish)
       is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), navigation.finish)
       is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
       is WithResultExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), code = navigation.requestCode, withResult = true)
-      is NavDirection -> navController(navigation.navHostId).navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
+      is NavDirection -> navController(navigation.childNavHostId).navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
     }
   }
 
-  protected fun <T : Parcelable> setArgument(obj: T) {
-    arguments = Bundle().apply { putParcelable(ARG_OBJ, obj) }
-  }
-
-  protected fun setId(id: Long) {
-    arguments = Bundle().apply { putLong(ARG_ID, id) }
-  }
-
   fun <T : Event> event(clazz: KClass<T>): Observable<T> = onEvent.ofType(clazz.java)
+
+  fun NavDestination.addResult(result: Result) = addDefaultArguments(result.bundle(RESULT))
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val c = clazz?.java ?: Class.forName(javaClass.name.replace("Screen", "Model")) as Class<ScreenModel<U, V>>
     model = ViewModelProviders.of(this, modelFactory)[c]
     model.args = arguments ?: Bundle.EMPTY
+    if (hasNavController) {
+      model.args.putInt(ACTION_ID, findNavController().currentDestination!!.id)
+    }
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -125,10 +110,16 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
         },
         model.collect(intents(), result)
     )
+    if (hasNavController) {
+      findNavController().currentDestination?.run {
+        defaultArguments.unbundleOptional<Result>(RESULT)?.run { result(this) }
+        defaultArguments.remove(RESULT)
+      }
+    }
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    result.onNext(Result(requestCode, resultCode == Activity.RESULT_OK, data))
+    result.onNext(Result(requestCode, resultCode == Activity.RESULT_OK, data?.extras))
   }
 
   override fun onStop() {
@@ -142,10 +133,9 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   }
 
   companion object {
-    const val ARG_OBJ = "arg_object"
-    const val ARG_ID = "arg_id"
+    const val ACTION_ID = "arg_action_id"
+    const val RESULT = "extra_result"
 
-    fun <T : Parcelable> getArgument(args: Bundle): T = args.getParcelable(ARG_OBJ)
-    fun getId(args: Bundle): Long = args.getLong(ARG_ID)
+    fun actionId(args: Bundle) = args.getInt(ACTION_ID)
   }
 }
