@@ -3,6 +3,7 @@ package com.vander.scaffold.screen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import com.vander.scaffold.R
 import com.vander.scaffold.ui.widget.adapter.AdapterModel
 import com.vander.scaffold.ui.widget.adapter.RecyclerAdapter
 import io.reactivex.Observable
+import kotlinx.android.parcel.Parcelize
 import kotlin.reflect.KClass
 
 /**
@@ -28,11 +30,9 @@ sealed class NavEvent : Event
 
 object None : NavEvent()
 object GoBack : NavEvent()
-data class GoUp(val navHostId: Int? = null) : NavEvent()
-data class PopStack(val navHostId: Int? = null) : NavEvent()
-data class NextScreen(val screen: Screen<*, *>, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
-data class NextChildScreen(val screen: Screen<*, *>, val id: Int = R.id.child_container_id) : NavEvent()
-data class NextScreenResult(val screen: Screen<*, *>, val requestCode: Int, val id: Int = R.id.container_id, val fragmentsManager: Boolean = false) : NavEvent()
+data class GoUp(val childNavHostId: Int? = null) : NavEvent()
+data class PopStack(val childNavHostId: Int? = null) : NavEvent()
+data class PopWithResult(val extras: Bundle = Bundle.EMPTY, val success: Boolean = !extras.isEmpty) : NavEvent()
 data class NextActivity(val intent: Intent, val finish: Boolean = false) : NavEvent()
 data class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
 data class WithResult(val intent: Intent, val requestCode: Int = 0) : NavEvent()
@@ -42,16 +42,17 @@ data class NavDirection(
     val args: Bundle? = null,
     val navOptions: NavOptions? = null,
     val extras: Navigator.Extras? = null,
-    val navHostId: Int? = null) : NavEvent()
+    val childNavHostId: Int? = null) : NavEvent()
 
 data class ToastEvent(val msgRes: Int = -1, val msg: String = "", val length: Int = Toast.LENGTH_SHORT) : Event
 interface Notification : Event
 
+@Parcelize
 data class Result(
     val request: Int,
     val success: Boolean = false,
-    val intent: Intent? = null
-)
+    val extras: Bundle? = null
+) : Parcelable
 
 object Empty : Screen.State, Screen.Intents
 

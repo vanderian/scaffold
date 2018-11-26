@@ -1,6 +1,8 @@
 package com.vander.scaffold
 
+import android.os.Bundle
 import android.os.Looper
+import android.os.Parcelable
 import androidx.navigation.NavDirections
 import com.vander.scaffold.screen.NavDirection
 import io.reactivex.Observable
@@ -12,4 +14,9 @@ fun <T> Observable<T>.switchToMainIfOther(): Observable<T> = this.flatMapSingle 
   else Single.just(it).observeOn(AndroidSchedulers.mainThread())
 }
 
-fun NavDirections.event(navHostId: Int? = null): NavDirection = NavDirection(this.actionId, this.arguments, navHostId = navHostId)
+fun NavDirections.event(childNavHostId: Int? = null): NavDirection = NavDirection(this.actionId, this.arguments, childNavHostId = childNavHostId)
+
+private const val BUNDLE_PARCELABLE_KEY = "BUNDLE_PARCELABLE_KEY"
+fun <T : Parcelable> T.bundle(key: String = BUNDLE_PARCELABLE_KEY): Bundle = Bundle().apply { putParcelable(key, this@bundle) }
+fun <T : Parcelable> Bundle.unbundleOptional(key: String = BUNDLE_PARCELABLE_KEY): T? = getParcelable(key)
+fun <T : Parcelable> Bundle.unbundle(key: String = BUNDLE_PARCELABLE_KEY): T = unbundleOptional(key)!!
