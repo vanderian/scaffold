@@ -1,11 +1,14 @@
 package sk.vander.example
 
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import autodagger.AutoComponent
 import autodagger.AutoInjector
 import com.vander.scaffold.BaseApp
 import com.vander.scaffold.BaseAppModule
 import com.vander.scaffold.annotations.*
+import com.vander.scaffold.debugyzer.bugreport.BugReportContainer
+import com.vander.scaffold.debugyzer.bugreport.ReportData
 import com.vander.scaffold.screen.Coordinator
 import com.vander.scaffold.screen.CoordinatorModule
 import com.vander.scaffold.ui.ViewContainer
@@ -54,5 +57,5 @@ object AppModule {
   }
 
   @JvmStatic @Provides @ApplicationScope
-  fun providesViewContainer(): ViewContainer = ViewContainer.DEFAULT
+  fun providesViewContainer(ctx: Context): ViewContainer = BugReportContainer(ctx, ReportData("a@a.a", "v1", 10), { true })
 }

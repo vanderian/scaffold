@@ -82,6 +82,8 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
 
 class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
   private lateinit var form: FormInput
+  override val hasNavController: Boolean
+    get() = false
 
   private val coordinator
     get() = view_complex.getCoordinator() as FooCoordinator

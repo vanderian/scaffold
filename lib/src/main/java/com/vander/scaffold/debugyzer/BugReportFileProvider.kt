@@ -8,6 +8,6 @@ import com.vander.scaffold.BuildConfig
  */
 class BugReportFileProvider : FileProvider() {
   companion object {
-    const val authority = BuildConfig.APPLICATION_ID + ".debugyzer.provider"
+    const val authority = "com.vander.scaffold.debugyzer.provider"
   }
 }
