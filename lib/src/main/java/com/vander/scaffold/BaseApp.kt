@@ -1,6 +1,7 @@
 package com.vander.scaffold
 
 import android.os.Looper
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.vander.scaffold.ui.ActivityHierarchyServer
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -21,6 +22,7 @@ abstract class BaseApp : DaggerApplication() {
 
   override fun onCreate() {
     super.onCreate()
+    AndroidThreeTen.init(this)
 
     registerActivityLifecycleCallbacks(ActivityHierarchyServer.Proxy().apply {
       activityHierarchyServer.forEach { addServer(it) }

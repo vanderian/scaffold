@@ -1,2 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.vander.scaffold"/>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vander.scaffold"
+    >
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application>
+        <provider
+            android:name=".debugyzer.BugReportFileProvider"
+            android:authorities="${applicationId}.debugyzer.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/debugyzer_paths"
+                />
+        </provider>
+    </application>
+</manifest>

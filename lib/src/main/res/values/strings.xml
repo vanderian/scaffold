@@ -1,5 +1,15 @@
 <resources>
-    <string name="app_name">lib</string>
     <string name="no_app_error">There is no application to take handle of %1$s action.</string>
     <string name="action_retry">Retry</string>
+
+    <string name="debug_button_positive">Submit</string>
+    <string name="debug_button_negative">@android:string/cancel</string>
+    <string name="debug_title_report_bug">Report a bug</string>
+    <string name="debug_hint_title">What\'s the problem?</string>
+    <string name="debug_hint_details">Additional details</string>
+    <string name="debug_check_screenshot">Include screenshot?</string>
+    <string name="debug_check_logs">Include logs?</string>
+
+    <string name="debug_error_logs">Couldn\'t attach the logs.</string>
+    <string name="debug_error_empty">Cannot be empty.</string>
 </resources>
