@@ -29,6 +29,8 @@ dependencies {
     api deps.rxjava_android
     api deps.rxjava_kotlin
     api deps.timber
+    api deps.three_ten
+    implementation deps.constraint_layout
     implementation deps.rxbindings_design_kt
     implementation deps.rxbindings_appcompat_kt
     implementation deps.rxbindings_support_kt
@@ -40,6 +42,9 @@ dependencies {
     api deps.dagger
     api deps.dagger_android
     api deps.autodagger
+
+    implementation deps.okio
+    implementation deps.telescope
 
     kapt deps.dagger_compiler
     kapt deps.autodagger_compiler
