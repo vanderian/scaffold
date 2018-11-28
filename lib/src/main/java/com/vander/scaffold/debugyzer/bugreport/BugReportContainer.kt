@@ -22,7 +22,7 @@ class BugReportContainer(
       if (enabled()) {
         bugReporter.init(enabled())
         activity.setContentView(R.layout.container_telescope)
-        val telescopeLayout = activity.findViewById(R.id.container_telescope) as TelescopeLayout
+        val telescopeLayout = activity.findViewById<TelescopeLayout>(R.id.container_telescope)
         telescopeLayout.setLens(bugReporter.lens(activity, reportData))
         telescopeLayout
       } else {
