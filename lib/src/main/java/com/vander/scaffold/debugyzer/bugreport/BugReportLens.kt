@@ -73,8 +73,8 @@ class BugReportLens(
     }
 
     body.append("{panel:title=App}\n")
-    body.append("ReportData: ").append(reportData.name).append('\n')
-    body.append("ReportData code: ").append(reportData.code).append('\n')
+    body.append("Version: ").append(reportData.name).append('\n')
+    body.append("Version code: ").append(reportData.code).append('\n')
     body.append("{panel}\n\n")
 
     body.append("{panel:title=Device}\n")

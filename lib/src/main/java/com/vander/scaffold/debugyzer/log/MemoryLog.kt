@@ -8,6 +8,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.processors.PublishProcessor
 import okio.BufferedSink
 import okio.Okio
+import okio.buffer
+import okio.sink
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 import timber.log.Timber
@@ -52,7 +54,7 @@ class MemoryLog constructor(private val ctx: Context, private val bufferSize: In
 
     var sink: BufferedSink? = null
     try {
-      sink = Okio.buffer(Okio.sink(output))
+      sink = output.sink().buffer()
       val entries = bufferedLogs()
       for (entry in entries) {
         sink.writeUtf8(entry.prettyPrint()).writeByte('\n'.toInt())

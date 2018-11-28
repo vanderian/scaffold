@@ -69,7 +69,7 @@ interface ListIntents<T : AdapterModel, R> : Screen.Intents {
   fun onItem(): Observable<R> = adapter.itemEventSource.toObservable()
 }
 
-interface PageListIntents<T : AdapterModel, R> : ListIntents<T, R> {
+interface PageIntents {
   fun loadMore(): Observable<Unit>
   fun retryPage(): Observable<Unit>
 }

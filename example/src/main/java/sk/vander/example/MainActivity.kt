@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.Callable
 import javax.inject.Inject
 
-val iter: Int = 0
+var iter: Int = 0
   get() = field++
 
 class MinLengthRule : ValidateRule() {
