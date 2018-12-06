@@ -49,7 +49,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   abstract fun intents(): V
   abstract fun render(state: U)
 
-  protected fun interceptEvent(it: Event): Event = it
+  protected open fun interceptEvent(it: Event): Event = it
 
   private fun checkStartFinish(intent: Intent, finish: Boolean = false, code: Int = 0, withResult: Boolean = false) {
     if (intent.resolveActivity(context!!.packageManager) != null) {
