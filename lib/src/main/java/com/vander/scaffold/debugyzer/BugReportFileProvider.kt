@@ -1,5 +1,6 @@
 package com.vander.scaffold.debugyzer
 
+import android.content.Context
 import android.support.v4.content.FileProvider
 import com.vander.scaffold.BuildConfig
 
@@ -8,6 +9,6 @@ import com.vander.scaffold.BuildConfig
  */
 class BugReportFileProvider : FileProvider() {
   companion object {
-    const val authority = "com.vander.scaffold.debugyzer.provider"
+    fun authority(context: Context) = "${context.packageName}.debugyzer.provider"
   }
 }

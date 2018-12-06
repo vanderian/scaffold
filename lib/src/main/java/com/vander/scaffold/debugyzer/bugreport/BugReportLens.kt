@@ -97,14 +97,14 @@ class BugReportLens(
     intent.setText(body.toString())
 
     if (screenshot != null && report.includeScreenshot) {
-      intent.addStream(FileProvider.getUriForFile(activity, BugReportFileProvider.authority, screenshot!!))
+      intent.addStream(FileProvider.getUriForFile(activity, BugReportFileProvider.authority(activity), screenshot!!))
     }
     report.appLogs?.let {
-      intent.addStream(FileProvider.getUriForFile(activity, BugReportFileProvider.authority, it))
+      intent.addStream(FileProvider.getUriForFile(activity, BugReportFileProvider.authority(activity), it))
     }
 
     report.dumpLogs?.let {
-      intent.addStream(FileProvider.getUriForFile(activity, BugReportFileProvider.authority, it))
+      intent.addStream(FileProvider.getUriForFile(activity, BugReportFileProvider.authority(activity), it))
     }
 
     intent.startChooser()
