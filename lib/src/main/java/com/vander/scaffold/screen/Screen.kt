@@ -49,6 +49,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   abstract fun intents(): V
   abstract fun render(state: U)
 
+  protected fun interceptEvent(it: Event): Event = it
+
   private fun checkStartFinish(intent: Intent, finish: Boolean = false, code: Int = 0, withResult: Boolean = false) {
     if (intent.resolveActivity(context!!.packageManager) != null) {
       if (withResult) startActivityForResult(intent, code) else startActivity(intent)
@@ -58,8 +60,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     }
     if (finish) activity?.finish()
   }
-
   private fun navHost(id: Int?) = id?.let { childFragmentManager.findFragmentById(it) ?: fragmentManager?.findFragmentById(it) }
+
   private fun navController(id: Int? = null) = (navHost(id)?.findNavController() ?: findNavController())
 
   private fun navigate(navigation: NavEvent) {
@@ -101,13 +103,15 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     super.onStart()
     disposable.addAll(
         model.state.log("screen state").switchToMainIfOther().subscribe { render(it) },
-        model.event.log("screen event").switchToMainIfOther().subscribe {
-          when (it) {
-            is NavEvent -> navigate(it)
-            is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()
-            else -> onEvent.onNext(it)
-          }
-        },
+        model.event.log("screen event").switchToMainIfOther()
+            .map { interceptEvent(it) }
+            .subscribe {
+              when (it) {
+                is NavEvent -> navigate(it)
+                is ToastEvent -> Toast.makeText(context, if (it.msgRes == -1) it.msg else context!!.getString(it.msgRes), it.length).show()
+                else -> onEvent.onNext(it)
+              }
+            },
         model.collect(intents(), result)
     )
     if (hasNavController) {
