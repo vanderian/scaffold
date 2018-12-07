@@ -6,17 +6,21 @@ import autodagger.AutoComponent
 import autodagger.AutoInjector
 import com.vander.scaffold.BaseApp
 import com.vander.scaffold.BaseAppModule
-import com.vander.scaffold.annotations.*
+import com.vander.scaffold.annotations.ActivityScope
+import com.vander.scaffold.annotations.ApplicationScope
+import com.vander.scaffold.annotations.ScreenScope
+import com.vander.scaffold.annotations.ViewModelKey
 import com.vander.scaffold.debugyzer.bugreport.BugReportContainer
 import com.vander.scaffold.debugyzer.bugreport.ReportData
-import com.vander.scaffold.screen.Coordinator
 import com.vander.scaffold.screen.CoordinatorModule
+import com.vander.scaffold.ui.ActivityHierarchyServer
 import com.vander.scaffold.ui.ViewContainer
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
+import dagger.multibindings.IntoSet
 import timber.log.Timber
 
 @AutoComponent(
@@ -38,6 +42,9 @@ class App : BaseApp() {
 @Module(includes = [BaseAppModule::class])
 object AppModule {
 
+  @JvmStatic @Provides @ApplicationScope @IntoSet
+  fun providesHierarchyServer(): ActivityHierarchyServer = ActivityHierarchyServer.Debug()
+
   @Module
   abstract class Ui {
     @ActivityScope @ContributesAndroidInjector(modules = [CoordinatorModule::class, Screens::class])
@@ -45,9 +52,6 @@ object AppModule {
 
     @Binds @IntoMap @ViewModelKey(FooModel::class)
     abstract fun provideFooModel(viewModel: FooModel): ViewModel
-
-    @Binds @IntoMap @ClassKeyCoordinator(FooCoordinator::class)
-    abstract fun provideFooCoordinator(coordinator: FooCoordinator): Coordinator
   }
 
   @Module
