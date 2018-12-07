@@ -88,6 +88,10 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     super.onCreate(savedInstanceState)
     val c = clazz?.java ?: Class.forName(javaClass.name.replace("Screen", "Model")) as Class<ScreenModel<U, V>>
     model = ViewModelProviders.of(this, modelFactory)[c]
+  }
+
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
     model.args = arguments ?: Bundle.EMPTY
     if (hasNavController) {
       model.args.putInt(ACTION_ID, findNavController().currentDestination!!.id)

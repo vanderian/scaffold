@@ -2,8 +2,6 @@ package sk.vander.example
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
 import com.jakewharton.rxbinding2.view.clicks
 import com.vander.scaffold.form.Form
 import com.vander.scaffold.form.FormInput
@@ -13,12 +11,14 @@ import com.vander.scaffold.form.validator.NotEmptyRule
 import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.*
-import com.vander.scaffold.ui.FragmentActivity
 import com.vander.scaffold.ui.HandlesBack
+import com.vander.scaffold.ui.NavigationActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_custom_view.*
+import kotlinx.android.synthetic.main.layout_custom_view.view.*
 import java.util.concurrent.Callable
 import javax.inject.Inject
 
@@ -37,16 +37,8 @@ class MinLengthRule : ValidateRule() {
   override fun validate(text: String): Boolean = text.length >= minLength
 }
 
-class MainActivity : FragmentActivity() {
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    if (savedInstanceState == null) {
-      supportFragmentManager.beginTransaction()
-          .replace(R.id.container_id, FooScreen())
-          .commit()
-    }
-  }
+class MainActivity : NavigationActivity() {
+  override val graphId: Int = R.navigation.app_graph
 }
 
 data class FooState(
@@ -82,11 +74,6 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
 
 class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
   private lateinit var form: FormInput
-  override val hasNavController: Boolean
-    get() = false
-
-  private val coordinator
-    get() = view_complex.getCoordinator() as FooCoordinator
 
   lateinit var onBack: Callable<Boolean>
 
@@ -100,7 +87,7 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
 
   override fun intents(): FooIntents = object : FooIntents {
     override val form: FormInput = this@FooScreen.form
-    override fun submit(): Observable<Unit> = coordinator.clicks()
+    override fun submit(): Observable<Unit> = view_complex.submit.clicks()
     override fun back(): Observable<Unit> = Observable.create { emitter -> onBack = Callable { emitter.onNext(Unit); true } }
     override fun events(): List<Observable<*>> = form.events(this@FooScreen)
   }
@@ -110,16 +97,4 @@ class FooScreen : Screen<FooState, FooIntents>(), HandlesBack {
   }
 
   override fun onBackPressed(): Boolean = if (text.text == "on back") false else onBack.call()
-}
-
-class FooCoordinator @Inject constructor() : Coordinator() {
-  lateinit var submit: Button
-
-  override fun attach(view: View) {
-    super.attach(view)
-    submit = view.findViewById(R.id.submit)
-    Toast.makeText(view.context, "attach", Toast.LENGTH_SHORT).show()
-  }
-
-  fun clicks(): Observable<Unit> = submit.clicks()
 }

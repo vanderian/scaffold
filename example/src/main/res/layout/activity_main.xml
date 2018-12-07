@@ -64,7 +64,6 @@
 
 
     <include
-        android:id="@+id/view_complex"
         layout="@layout/layout_custom_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
