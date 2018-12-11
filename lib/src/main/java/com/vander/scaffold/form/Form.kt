@@ -33,6 +33,8 @@ class Form {
   fun spinnerSelection(@IdRes id: Int): Int = state[id] as Int? ?: throw IllegalArgumentException()
   fun inputText(@IdRes id: Int): String = state[id] as String? ?: throw IllegalArgumentException()
   fun checkBoxChecked(@IdRes id: Int): Boolean = state[id] as Boolean? ?: throw IllegalArgumentException()
+  fun hasValue(@IdRes id: Int): Boolean = state.containsKey(id)
+  fun hasValues(): Boolean = validations.keys.all { hasValue(it) }
 
   fun validate(eventObserver: Observer<Event>, vararg validations: Validation): Boolean {
     val errors: FormErrors = mutableMapOf()
