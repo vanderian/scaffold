@@ -35,6 +35,7 @@ class Form {
   fun checkBoxChecked(@IdRes id: Int): Boolean = state[id] as Boolean? ?: throw IllegalArgumentException()
   fun hasValue(@IdRes id: Int): Boolean = state.containsKey(id)
   fun hasValues(): Boolean = validations.keys.all { hasValue(it) }
+  fun clear(@IdRes id: Int) = (state as MutableMap).remove(id)
 
   fun validate(eventObserver: Observer<Event>, vararg validations: Validation): Boolean {
     val errors: FormErrors = mutableMapOf()
