@@ -34,12 +34,6 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    if (savedInstanceState == null) {
-      navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        Timber.d("destination: ${destination.label}, args: $arguments")
-      }
-    }
-
     // calls setContentView()
     container = viewContainer[this]
     val inflater = LayoutInflater.from(this)
@@ -49,6 +43,12 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
       navController.graph = graph()
     } else {
       inflater.inflate(layoutId, container, true)
+    }
+
+    if (savedInstanceState == null) {
+      navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        Timber.d("destination: ${destination.label}, args: $arguments")
+      }
     }
   }
 
@@ -61,7 +61,6 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
     supportFragmentManager.findFragmentById(R.id.navHostDefault)?.childFragmentManager?.primaryNavigationFragment?.let {
       if (BackSupport.handlesBack(it)) return
     }
-    if (navController.popBackStack()) return
     super.onBackPressed()
   }
 }
