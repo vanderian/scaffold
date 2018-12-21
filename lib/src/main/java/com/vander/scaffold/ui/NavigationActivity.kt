@@ -14,6 +14,7 @@ import com.vander.scaffold.R
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjector, Injectable {
@@ -33,6 +34,12 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    if (savedInstanceState == null) {
+      navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        Timber.d("destination: ${destination.label}, args: $arguments")
+      }
+    }
+
     // calls setContentView()
     container = viewContainer[this]
     val inflater = LayoutInflater.from(this)
@@ -48,12 +55,13 @@ abstract class NavigationActivity : AppCompatActivity(), HasSupportFragmentInjec
   override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
 
   override fun onSupportNavigateUp(): Boolean =
-      (supportFragmentManager.findFragmentById(R.id.navHostDefault)?.findNavController()?.navigateUp() ?: false) or super.onSupportNavigateUp()
+      navController.navigateUp() or super.onSupportNavigateUp()
 
   override fun onBackPressed() {
     supportFragmentManager.findFragmentById(R.id.navHostDefault)?.childFragmentManager?.primaryNavigationFragment?.let {
       if (BackSupport.handlesBack(it)) return
     }
+    if (navController.popBackStack()) return
     super.onBackPressed()
   }
 }

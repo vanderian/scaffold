@@ -11,10 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.NavArgumentBuilder
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
-import com.vander.scaffold.*
+import com.vander.scaffold.Injectable
+import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
+import com.vander.scaffold.switchToMainIfOther
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
@@ -82,8 +85,9 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
 
   fun <T : Event> event(clazz: KClass<T>): Observable<T> = onEvent.ofType(clazz.java)
 
-  fun NavDestination.addResult(result: Result) = addDefaultArguments(result.bundle(RESULT))
+  fun NavDestination.addResult(result: Result) = addArgument(RESULT, NavArgumentBuilder().apply { defaultValue = result }.build())
 
+  @Suppress("UNCHECKED_CAST")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val c = clazz?.java ?: Class.forName(javaClass.name.replace("Screen", "Model")) as Class<ScreenModel<U, V>>
@@ -93,7 +97,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     model.args = arguments ?: Bundle.EMPTY
-    if (hasNavController && model.args.getInt(ACTION_ID, -1) == -1) {
+    if (hasNavController && model.args.containsKey(ACTION_ID).not()) {
       model.args.putInt(ACTION_ID, findNavController().currentDestination!!.id)
     }
   }
@@ -116,8 +120,8 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
     )
     if (hasNavController) {
       findNavController().currentDestination?.run {
-        defaultArguments.unbundleOptional<Result>(RESULT)?.run { result(this) }
-        defaultArguments.remove(RESULT)
+        (arguments[RESULT]?.defaultValue as? Result)?.run { result(this) }
+        removeArgument(RESULT)
       }
     }
   }

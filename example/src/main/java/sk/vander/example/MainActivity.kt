@@ -19,6 +19,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_custom_view.*
 import kotlinx.android.synthetic.main.layout_custom_view.view.*
+import timber.log.Timber
 import java.util.concurrent.Callable
 import javax.inject.Inject
 
@@ -61,13 +62,19 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
     state.init(FooState("hello"))
 
     val submit = intents.submit()
-        .filter { form.validate(event) }
+//        .filter { form.validate(event) }
+        .map {
+          if (Screen.actionId(args) == R.id.fooScreenResult) PopWithResult(Bundle().apply { putString("bar", "bar") })
+          else NavDirection(R.id.action_fooScreen_to, Bundle().apply { putString("foo", "foo") })
+        }
+        .doOnNext { event.onNext(it) }
 
     return CompositeDisposable(
+        form.subscribe(intents, event),
         result.subscribe { event.onNext(ToastEvent(msg = "hello result ${it.request}")) },
-        submit.subscribe { event.onNext(WithResultExplicit(MainActivity::class, iter)) },
+        submit.subscribe(),
         intents.back().subscribe { state.next { copy(text = "on back") } },
-        form.subscribe(intents, event)
+        result.subscribe { event.onNext(ToastEvent(msg = "result $it")) }
     )
   }
 }

@@ -10,5 +10,34 @@
         android:id="@+id/fooScreen"
         android:name="sk.vander.example.FooScreen"
         android:label="FooScreen"
+        >
+        <action
+            android:id="@+id/action_fooScreen_to"
+            app:destination="@id/fooScreenNext"
+            app:popUpTo="@+id/app_graph"
+            app:popUpToInclusive="true"
+            />
+        <argument
+            android:name="some"
+            android:defaultValue="foo"
+            app:argType="string"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fooScreenResult"
+        android:name="sk.vander.example.FooScreen"
+        android:label="FooScreenResult"
         />
+
+    <fragment
+        android:id="@+id/fooScreenNext"
+        android:name="sk.vander.example.FooScreen"
+        android:label="fooScreenNext"
+        >
+        <action
+            android:id="@+id/action_fooScreen_to"
+            app:destination="@id/fooScreen"
+            />
+    </fragment>
 </navigation>

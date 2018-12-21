@@ -1,6 +1,6 @@
 def support_version = '28.0.0'
 def arch_version = '1.1.1'
-def nav_version = "1.0.0-alpha07"
+def nav_version = "1.0.0-alpha09"
 ext.deps = [
         appcompat_v7                : "com.android.support:appcompat-v7:$support_version",
         support_v4                  : "com.android.support:support-v4:$support_version",
