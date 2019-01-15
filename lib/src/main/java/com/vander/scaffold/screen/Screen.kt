@@ -35,7 +35,7 @@ abstract class Screen<U : Screen.State, out V : Screen.Intents>(
   }
 
   private var result = BehaviorSubject.create<Result>()
-  private lateinit var model: ScreenModel<U, V>
+  protected lateinit var model: ScreenModel<U, V>
   private val onEvent: PublishSubject<Event> = PublishSubject.create()
   private val disposable = CompositeDisposable()
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
