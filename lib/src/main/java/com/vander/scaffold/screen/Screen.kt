@@ -25,7 +25,7 @@ import kotlin.reflect.KClass
 /**
  * @author marian on 20.9.2017.
  */
-abstract class Screen<U : Screen.State, out V : Screen.Intents>(
+abstract class Screen<U : Screen.State, V : Screen.Intents>(
     private val clazz: KClass<out ScreenModel<U, V>>? = null
 ) : Fragment(), Injectable {
 
