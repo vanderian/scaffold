@@ -19,40 +19,42 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.kotlin
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation deps.material
-    api deps.recyclerview
-    implementation deps.constraint_layout
+    api 'com.google.android.material:material:1.1.0-alpha02'
+    api 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'androidx.appcompat:appcompat:1.0.2'
+    api 'androidx.constraintlayout:constraintlayout:1.1.3'
 
-    api deps.rxjava
-    api deps.rxjava_android
-    api deps.rxjava_kotlin
-    api deps.timber
-    api deps.three_ten
+    api 'io.reactivex.rxjava2:rxjava:2.2.4'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    api 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    api 'com.jakewharton.timber:timber:4.7.1'
+    api 'com.jakewharton.threetenabp:threetenabp:1.1.1'
 
-    implementation deps.rxbind_material
-    implementation deps.rxbind_appcompat
-    implementation deps.rxbind_swiperefresh
+    api "com.jakewharton.rxbinding3:rxbinding-material:$rxbind_version"
+    api "com.jakewharton.rxbinding3:rxbinding-appcompat:$rxbind_version"
+    api "com.jakewharton.rxbinding3:rxbinding-swiperefreshlayout:$rxbind_version"
+    api "com.jakewharton.rxbinding3:rxbinding-recyclerview:$rxbind_version"
 
-    api deps.lifecycle_ext
-    api deps.navigation_fragment
-    api deps.navigation_ui
+    api 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    api "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    api "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
-    api deps.dagger
-    api deps.dagger_android
-    api deps.autodagger
+    api 'com.google.dagger:dagger:2.19'
+    api 'com.google.dagger:dagger-android-support:2.19'
+    api 'com.github.lukaspili.autodagger2:autodagger2:1.1'
 
-    implementation deps.okio
-    implementation deps.telescope
+    implementation 'com.squareup.okio:okio:2.1.0'
+    implementation 'com.mattprecious.telescope:telescope:2.1.0'
 
-    kapt deps.dagger_compiler
-    kapt deps.autodagger_compiler
-    compileOnly deps.javax_annotations
+    kapt 'com.google.dagger:dagger-compiler:2.19'
+    kapt 'com.github.lukaspili.autodagger2:autodagger2-compiler:1.1'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    testImplementation deps.junit
+    testImplementation 'junit:junit:4.12'
 
-    androidTestImplementation(deps.espresso, {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
