@@ -1,8 +1,7 @@
 package com.vander.scaffold.debugyzer
 
 import android.content.Context
-import android.support.v4.content.FileProvider
-import com.vander.scaffold.BuildConfig
+import androidx.core.content.FileProvider
 
 /**
  * @author marian on 14.8.2017.

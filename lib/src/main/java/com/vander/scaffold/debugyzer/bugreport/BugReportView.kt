@@ -1,11 +1,11 @@
 package com.vander.scaffold.debugyzer.bugreport
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.text.TextUtils
 import android.util.AttributeSet
-import com.jakewharton.rxbinding2.view.focusChanges
-import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.jakewharton.rxbinding3.view.focusChanges
+import com.jakewharton.rxbinding3.widget.afterTextChangeEvents
 import com.vander.scaffold.R
 import com.vander.scaffold.ui.text
 import io.reactivex.Observable
@@ -44,7 +44,7 @@ class BugReportView(context: Context, attrs: AttributeSet) : ConstraintLayout(co
 
   fun onValid(): Observable<Boolean> =
       inputTitle.editText!!.afterTextChangeEvents()
-          .map { !TextUtils.isEmpty(it.editable().toString()) }
+          .map { !TextUtils.isEmpty(it.editable.toString()) }
 
   val report: Report
     get() = Report(inputTitle.text(), inputDescription.text(), checkScreenshot.isChecked, checkLogs.isChecked)

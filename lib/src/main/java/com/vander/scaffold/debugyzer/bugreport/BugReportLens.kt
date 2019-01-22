@@ -1,13 +1,12 @@
 package com.vander.scaffold.debugyzer.bugreport
 
-
 import android.app.Activity
 import android.os.Build
-import android.support.v4.app.ShareCompat
-import android.support.v4.content.FileProvider
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.widget.Toast
+import androidx.core.app.ShareCompat
+import androidx.core.content.FileProvider
 import com.mattprecious.telescope.Lens
 import com.vander.scaffold.R
 import com.vander.scaffold.debugyzer.BugReportFileProvider

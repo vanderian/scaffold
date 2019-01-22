@@ -3,8 +3,8 @@ package com.vander.scaffold.debugyzer.bugreport
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
 import com.vander.scaffold.R
 import io.reactivex.Maybe
 import io.reactivex.disposables.Disposable

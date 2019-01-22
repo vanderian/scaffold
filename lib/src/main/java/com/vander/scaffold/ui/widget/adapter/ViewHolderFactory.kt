@@ -1,7 +1,7 @@
 package com.vander.scaffold.ui.widget.adapter
 
-import android.support.annotation.LayoutRes
 import android.view.View
+import androidx.annotation.LayoutRes
 
 /**
  * @author marian on 15.3.2017.

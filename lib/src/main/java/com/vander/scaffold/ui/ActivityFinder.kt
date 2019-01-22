@@ -2,8 +2,8 @@ package com.vander.scaffold.ui
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * @author marian on 20.9.2017.

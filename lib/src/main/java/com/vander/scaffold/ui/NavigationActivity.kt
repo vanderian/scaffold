@@ -1,12 +1,12 @@
 package com.vander.scaffold.ui
 
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.annotation.NavigationRes
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.annotation.NavigationRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.vander.scaffold.Injectable

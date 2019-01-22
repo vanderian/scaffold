@@ -1,6 +1,6 @@
 package com.vander.scaffold.ui
 
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 
 /**
  * @author marian on 5.9.2017.

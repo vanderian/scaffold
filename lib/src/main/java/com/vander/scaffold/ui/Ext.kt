@@ -4,11 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.os.Looper
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.TextInputLayout
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputLayout
 import com.vander.scaffold.form.FormInput
 import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable

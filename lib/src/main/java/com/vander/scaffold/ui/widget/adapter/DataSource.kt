@@ -1,7 +1,7 @@
 package com.vander.scaffold.ui.widget.adapter
 
-import android.support.annotation.LayoutRes
-import android.support.v7.util.ListUpdateCallback
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.ListUpdateCallback
 
 abstract class DataSource<out T : AdapterModel> {
   var listUpdateCallback: ListUpdateCallback? = null

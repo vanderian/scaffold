@@ -1,11 +1,11 @@
 package com.vander.scaffold.form
 
-import android.support.design.widget.TextInputLayout
 import android.widget.CheckBox
 import android.widget.Spinner
-import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
-import com.jakewharton.rxbinding2.widget.checkedChanges
-import com.jakewharton.rxbinding2.widget.itemSelections
+import com.google.android.material.textfield.TextInputLayout
+import com.jakewharton.rxbinding3.widget.afterTextChangeEvents
+import com.jakewharton.rxbinding3.widget.checkedChanges
+import com.jakewharton.rxbinding3.widget.itemSelections
 import com.vander.scaffold.form.validator.AfterTextChangedWatcher
 import com.vander.scaffold.screen.Screen
 import io.reactivex.Observable
@@ -42,12 +42,14 @@ class FormInput {
   }
 
   private fun setErrors(errors: FormErrors) {
-    inputLayouts.forEach { input -> input.error = errors[input.id]?.let { (errorRes, params) ->
-      if (params != null)
-        input.context.getString(errorRes, *params)
-      else
-        input.context.getString(errorRes)
-    } }
+    inputLayouts.forEach { input ->
+      input.error = errors[input.id]?.let { (errorRes, params) ->
+        if (params != null)
+          input.context.getString(errorRes, *params)
+        else
+          input.context.getString(errorRes)
+      }
+    }
   }
 
   fun validationEnabled(view: TextInputLayout, enabled: Boolean) = this.enabled.onNext(this.enabled.value!! + (view.id to enabled))
@@ -67,7 +69,7 @@ class FormInput {
   }
 
   internal val inputChanges by lazy<Observable<Pair<Int, String>>> {
-    Observable.merge(inputLayouts.map { v -> v.editText!!.afterTextChangeEvents().map { v.id to it.editable().toString() } }).share()
+    Observable.merge(inputLayouts.map { v -> v.editText!!.afterTextChangeEvents().map { v.id to it.editable.toString() } }).share()
   }
 
   internal val spinnerChanges by lazy<Observable<Pair<Int, Int>>> {

@@ -13,7 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -37,17 +37,15 @@ dependencies {
     implementation project(':lib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin
-    implementation deps.appcompat_v7
-    implementation deps.design
+
+    implementation deps.appcompat
+    implementation deps.material
     implementation deps.constraint_layout
-    implementation deps.rxbindings_kt
-    implementation deps.rxbindings_support_kt
-    implementation deps.rxbindings_appcompat_kt
-    implementation deps.rxbindings_design_kt
+
+    implementation deps.rxbind
 
     kapt deps.dagger_compiler
     kapt deps.dagger_android_compiler
-    kapt deps.butterknife_compiler
     kapt deps.autodagger_compiler
     compileOnly deps.javax_annotations
 

@@ -21,19 +21,19 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin
 
-    implementation deps.design
-//    implementation deps.calligraphy
-
+    implementation deps.material
     api deps.recyclerview
+    implementation deps.constraint_layout
+
     api deps.rxjava
     api deps.rxjava_android
     api deps.rxjava_kotlin
     api deps.timber
     api deps.three_ten
-    implementation deps.constraint_layout
-    implementation deps.rxbindings_design_kt
-    implementation deps.rxbindings_appcompat_kt
-    implementation deps.rxbindings_support_kt
+
+    implementation deps.rxbind_material
+    implementation deps.rxbind_appcompat
+    implementation deps.rxbind_swiperefresh
 
     api deps.lifecycle_ext
     api deps.navigation_fragment
