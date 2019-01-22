@@ -32,6 +32,8 @@ dependencies {
     api 'com.jakewharton.timber:timber:4.7.1'
     api 'com.jakewharton.threetenabp:threetenabp:1.1.1'
 
+    api "com.jakewharton.rxbinding3:rxbinding:$rxbind_version"
+    api "com.jakewharton.rxbinding3:rxbinding-core:$rxbind_version"
     api "com.jakewharton.rxbinding3:rxbinding-material:$rxbind_version"
     api "com.jakewharton.rxbinding3:rxbinding-appcompat:$rxbind_version"
     api "com.jakewharton.rxbinding3:rxbinding-swiperefreshlayout:$rxbind_version"
