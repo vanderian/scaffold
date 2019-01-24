@@ -13,7 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -36,19 +36,9 @@ androidExtensions {
 dependencies {
     implementation project(':lib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.kotlin
-    implementation deps.appcompat_v7
-    implementation deps.design
-    implementation deps.constraint_layout
-    implementation deps.rxbindings_kt
-    implementation deps.rxbindings_support_kt
-    implementation deps.rxbindings_appcompat_kt
-    implementation deps.rxbindings_design_kt
 
-    kapt deps.dagger_compiler
-    kapt deps.dagger_android_compiler
-    kapt deps.butterknife_compiler
-    kapt deps.autodagger_compiler
-    compileOnly deps.javax_annotations
-
+    kapt 'com.google.dagger:dagger-compiler:2.19'
+    kapt 'com.google.dagger:dagger-android-processor:2.19'
+    kapt 'com.github.lukaspili.autodagger2:autodagger2-compiler:1.1'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 }

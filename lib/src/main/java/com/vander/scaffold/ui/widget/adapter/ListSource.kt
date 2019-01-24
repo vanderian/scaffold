@@ -1,6 +1,6 @@
 package com.vander.scaffold.ui.widget.adapter
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import java.util.*
 
 class ListSource<T : AdapterModel>(private var list: List<T> = Collections.emptyList()) : DataSource<T>() {
@@ -18,7 +18,6 @@ class ListSource<T : AdapterModel>(private var list: List<T> = Collections.empty
 
       val diffResult = DiffUtil.calculateDiff(Callback(old, list), false)
       listUpdateCallback?.apply { diffResult.dispatchUpdatesTo(this) }
-
     }
 
   internal class Callback<T : AdapterModel>(

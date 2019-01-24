@@ -1,6 +1,6 @@
 package com.vander.scaffold.form
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import com.vander.scaffold.form.validator.ValidateRule
 import com.vander.scaffold.form.validator.Validation
 import com.vander.scaffold.screen.Event

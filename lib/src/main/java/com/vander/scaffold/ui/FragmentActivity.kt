@@ -1,11 +1,11 @@
 package com.vander.scaffold.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.vander.scaffold.Injectable
 import com.vander.scaffold.R
 import com.vander.scaffold.screen.CoordinatorProvider

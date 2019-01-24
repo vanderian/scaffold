@@ -1,6 +1,6 @@
 package com.vander.scaffold.form.validator
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 
 data class Validation(
     @IdRes val id: Int,

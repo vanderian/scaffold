@@ -1,7 +1,7 @@
 package com.vander.scaffold.ui.widget
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vander.scaffold.ui.checkMainThread
 import io.reactivex.Observable
 import io.reactivex.Observer

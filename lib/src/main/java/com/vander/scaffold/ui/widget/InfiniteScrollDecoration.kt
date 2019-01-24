@@ -7,11 +7,11 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.vander.scaffold.R
 import com.vander.scaffold.ui.dpToPx
 import com.vander.scaffold.ui.resourceId

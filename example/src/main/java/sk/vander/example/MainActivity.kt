@@ -2,7 +2,7 @@ package sk.vander.example
 
 import android.os.Bundle
 import android.view.View
-import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding3.view.clicks
 import com.vander.scaffold.form.Form
 import com.vander.scaffold.form.FormInput
 import com.vander.scaffold.form.FormIntents

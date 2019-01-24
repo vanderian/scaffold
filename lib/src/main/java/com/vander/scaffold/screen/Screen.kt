@@ -1,16 +1,16 @@
 package com.vander.scaffold.screen
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
 import com.vander.scaffold.*
@@ -35,7 +35,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
   }
 
   private var result = BehaviorSubject.create<Result>()
-  protected lateinit var model: ScreenModel<U, V>
+  private lateinit var model: ScreenModel<U, V>
   private val onEvent: PublishSubject<Event> = PublishSubject.create()
   private val disposable = CompositeDisposable()
   @Inject lateinit var modelFactory: ViewModelProvider.Factory
@@ -44,6 +44,12 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
 
   val state: U
     get() = model.stateValue
+
+  /**
+   * should be called after onActivityCreated
+   */
+  val destinationId: Int
+    get() = destinationId(model.args)
 
   @LayoutRes abstract fun layout(): Int
   abstract fun intents(): V
@@ -93,8 +99,8 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     model.args = arguments ?: Bundle.EMPTY
-    if (hasNavController && model.args.getInt(ACTION_ID, -1) == -1) {
-      model.args.putInt(ACTION_ID, findNavController().currentDestination!!.id)
+    if (hasNavController && !model.args.containsKey(DEST_ID)) {
+      model.args.putInt(DEST_ID, findNavController().currentDestination!!.id)
     }
   }
 
@@ -137,9 +143,9 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
   }
 
   companion object {
-    const val ACTION_ID = "arg_action_id"
+    const val DEST_ID = "arg_destination_id"
     const val RESULT = "extra_result"
 
-    fun actionId(args: Bundle) = args.getInt(ACTION_ID)
+    fun destinationId(args: Bundle) = args.getInt(DEST_ID)
   }
 }

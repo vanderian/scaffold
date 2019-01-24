@@ -1,7 +1,7 @@
 package com.vander.scaffold.screen
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.vander.scaffold.annotations.ApplicationScope
 import dagger.Module
 import dagger.Provides
