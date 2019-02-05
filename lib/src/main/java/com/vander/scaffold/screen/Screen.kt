@@ -11,8 +11,10 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavArgument
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.vander.scaffold.*
 import com.vander.scaffold.debug.log
 import io.reactivex.Observable
@@ -88,7 +90,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
 
   fun <T : Event> event(clazz: KClass<T>): Observable<T> = onEvent.ofType(clazz.java)
 
-  fun NavDestination.addResult(result: Result) = addDefaultArguments(result.bundle(RESULT))
+  fun NavDestination.addResult(result: Result) = addArgument(RESULT, result.navArgs())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -122,8 +124,8 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
     )
     if (hasNavController) {
       findNavController().currentDestination?.run {
-        defaultArguments.unbundleOptional<Result>(RESULT)?.run { result(this) }
-        defaultArguments.remove(RESULT)
+        (arguments[RESULT]?.defaultValue as? Result)?.run { result(this) }
+        arguments.remove(RESULT)
       }
     }
   }
