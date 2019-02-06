@@ -100,7 +100,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-    model.args = arguments ?: Bundle.EMPTY
+    model.args = arguments ?: Bundle()
     if (hasNavController && !model.args.containsKey(DEST_ID)) {
       model.args.putInt(DEST_ID, findNavController().currentDestination!!.id)
     }
