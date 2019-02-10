@@ -17,7 +17,7 @@ fun <T> Observable<T>.switchToMainIfOther(): Observable<T> = this.flatMapSingle 
   else Single.just(it).observeOn(AndroidSchedulers.mainThread())
 }
 
-fun NavDirections.event(childNavHostId: Int? = null): NavDirection = NavDirection(this.actionId, this.arguments, childNavHostId = childNavHostId)
+fun NavDirections.event(): NavDirection = NavDirection(this.actionId, this.arguments)
 
 private const val BUNDLE_PARCELABLE_KEY = "BUNDLE_PARCELABLE_KEY"
 fun <T : Parcelable> T.bundle(key: String = BUNDLE_PARCELABLE_KEY): Bundle = Bundle().apply { putParcelable(key, this@bundle) }

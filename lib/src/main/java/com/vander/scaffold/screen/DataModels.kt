@@ -29,8 +29,9 @@ sealed class NavEvent : Event
 
 object None : NavEvent()
 object GoBack : NavEvent()
-data class GoUp(val childNavHostId: Int? = null) : NavEvent()
-data class PopStack(val childNavHostId: Int? = null) : NavEvent()
+object GoUp : NavEvent()
+object PopStack : NavEvent()
+data class PopStackTo(val destination: Int, val inclusive: Boolean) : NavEvent()
 data class PopWithResult(val extras: Bundle = Bundle.EMPTY, val success: Boolean = !extras.isEmpty) : NavEvent()
 data class NextActivity(val intent: Intent, val finish: Boolean = false) : NavEvent()
 data class NextActivityExplicit(val clazz: KClass<out Activity>, val finish: Boolean = false, val intentBuilder: Intent.() -> Unit = {}) : NavEvent()
@@ -40,8 +41,7 @@ data class NavDirection(
     val action: Int,
     val args: Bundle? = null,
     val navOptions: NavOptions? = null,
-    val extras: Navigator.Extras? = null,
-    val childNavHostId: Int? = null) : NavEvent()
+    val extras: Navigator.Extras? = null) : NavEvent()
 
 data class ToastEvent(val msgRes: Int = -1, val msg: String = "", val length: Int = Toast.LENGTH_SHORT) : Event
 interface Notification : Event

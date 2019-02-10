@@ -11,16 +11,18 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavArgument
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.vander.scaffold.*
+import com.vander.scaffold.Injectable
+import com.vander.scaffold.R
 import com.vander.scaffold.debug.log
+import com.vander.scaffold.navArgs
+import com.vander.scaffold.switchToMainIfOther
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import java.util.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -67,14 +69,14 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
     if (finish) activity?.finish()
   }
 
-  private fun navHost(id: Int?) = id?.let { childFragmentManager.findFragmentById(it) ?: fragmentManager?.findFragmentById(it) }
-  private fun navController(id: Int? = null) = (navHost(id)?.findNavController() ?: findNavController())
+  private fun navController() = findNavController()
 
   private fun navigate(navigation: NavEvent) {
     when (navigation) {
-      GoBack -> activity!!.onBackPressed()
-      is GoUp -> navController(navigation.childNavHostId).navigateUp()
-      is PopStack -> navController(navigation.childNavHostId).popBackStack()
+      is GoBack -> activity!!.onBackPressed()
+      is GoUp -> navController().navigateUp()
+      is PopStack -> navController().popBackStack()
+      is PopStackTo -> navController().popBackStack(navigation.destination, navigation.inclusive)
       is PopWithResult -> navController().run {
         val id = currentDestination!!.id
         popBackStack()
@@ -84,7 +86,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
       is NextActivityExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), navigation.finish)
       is WithResult -> checkStartFinish(navigation.intent, code = navigation.requestCode, withResult = true)
       is WithResultExplicit -> checkStartFinish(Intent(context, navigation.clazz.java).apply(navigation.intentBuilder), code = navigation.requestCode, withResult = true)
-      is NavDirection -> navController(navigation.childNavHostId).navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
+      is NavDirection -> navController().navigate(navigation.action, navigation.args, navigation.navOptions, navigation.extras)
     }
   }
 
@@ -92,6 +94,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
 
   fun NavDestination.addResult(result: Result) = addArgument(RESULT, result.navArgs())
 
+  @Suppress("UNCHECKED_CAST")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val c = clazz?.java ?: Class.forName(javaClass.name.replace("Screen", "Model")) as Class<ScreenModel<U, V>>
@@ -125,7 +128,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
     if (hasNavController) {
       findNavController().currentDestination?.run {
         (arguments[RESULT]?.defaultValue as? Result)?.run { result(this) }
-        arguments.remove(RESULT)
+        arguments -= RESULT
       }
     }
   }
