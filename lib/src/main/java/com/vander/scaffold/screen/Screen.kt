@@ -22,7 +22,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import java.util.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -103,7 +102,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-    model.args = arguments ?: Bundle()
+    model.args = arguments.deepCopy() ?: Bundle()
     if (hasNavController && !model.args.containsKey(DEST_ID)) {
       model.args.putInt(DEST_ID, findNavController().currentDestination!!.id)
     }
@@ -128,7 +127,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
     if (hasNavController) {
       findNavController().currentDestination?.run {
         (arguments[RESULT]?.defaultValue as? Result)?.run { result(this) }
-        arguments -= RESULT
+        removeArgument(RESULT)
       }
     }
   }
