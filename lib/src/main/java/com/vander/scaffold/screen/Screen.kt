@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.core.app.BundleCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -102,7 +103,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-    model.args = arguments.deepCopy() ?: Bundle()
+    model.args = Bundle(arguments)
     if (hasNavController && !model.args.containsKey(DEST_ID)) {
       model.args.putInt(DEST_ID, findNavController().currentDestination!!.id)
     }
