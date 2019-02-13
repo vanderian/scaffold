@@ -10,8 +10,10 @@ interface FormIntents : Screen.Intents {
   fun inputsTextChanges(): Observable<Pair<Int, String>> = form.inputChanges
   fun spinnersSelections(): Observable<Pair<Int, Int>> = form.spinnerChanges
   fun checkBoxesChanges(): Observable<Pair<Int, Boolean>> = form.checkBoxChanges
+  fun focusChanges(): Observable<Pair<Int, Boolean>> = form.focusChanges
   fun allChanges(): Observable<Pair<Int, Any>> = Observable.merge(inputsTextChanges(), spinnersSelections(), checkBoxesChanges())
-  fun inputTextChanges(id: Int): Observable<Pair<Int, String>> = inputsTextChanges().filter { it.first == id }
-  fun spinnerSelections(id: Int): Observable<Pair<Int, Int>> = spinnersSelections().filter { it.first == id }
-  fun checkBoxChanges(id: Int): Observable<Pair<Int, Boolean>> = checkBoxesChanges().filter { it.first == id }
+  fun inputTextChanges(id: Int): Observable<String> = inputsTextChanges().filter { it.first == id }.map { it.second }
+  fun spinnerSelections(id: Int): Observable<Int> = spinnersSelections().filter { it.first == id }.map { it.second }
+  fun checkBoxChanges(id: Int): Observable<Boolean> = checkBoxesChanges().filter { it.first == id }.map { it.second }
+  fun focusChanges(id: Int): Observable<Boolean> = focusChanges().filter { it.first == id }.map { it.second }
 }

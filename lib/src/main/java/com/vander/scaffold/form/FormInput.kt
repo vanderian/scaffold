@@ -3,6 +3,7 @@ package com.vander.scaffold.form
 import android.widget.CheckBox
 import android.widget.Spinner
 import com.google.android.material.textfield.TextInputLayout
+import com.jakewharton.rxbinding3.view.focusChanges
 import com.jakewharton.rxbinding3.widget.afterTextChangeEvents
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.itemSelections
@@ -75,8 +76,13 @@ class FormInput {
   internal val spinnerChanges by lazy<Observable<Pair<Int, Int>>> {
     Observable.merge(spinners.map { v -> v.itemSelections().map { v.id to it } }).share()
   }
+
   internal val checkBoxChanges by lazy<Observable<Pair<Int, Boolean>>> {
     Observable.merge(checkBoxes.map { v -> v.checkedChanges().map { v.id to it } }).share()
+  }
+
+  internal val focusChanges by lazy<Observable<Pair<Int, Boolean>>> {
+    Observable.merge(inputLayouts.map { v -> v.focusChanges().map { v.id to it } }).share()
   }
 
   fun events(screen: Screen<*, *>): List<Observable<*>> = listOf(
