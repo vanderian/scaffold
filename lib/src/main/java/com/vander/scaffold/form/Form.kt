@@ -8,12 +8,12 @@ import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-class Form {
+class Form(private val eventObserver: Observer<Event>) {
   private val state: FormState = mutableMapOf()
   private var enabled: Map<Int, Boolean> = emptyMap()
   private var validations: Map<Int, Set<ValidateRule>> = mutableMapOf()
 
-  fun subscribe(intents: FormIntents, eventObserver: Observer<Event>): Disposable =
+  fun subscribe(intents: FormIntents): Disposable =
       CompositeDisposable().apply {
         addAll(
             intents.allChanges()
@@ -37,7 +37,7 @@ class Form {
   fun hasValues(): Boolean = validations.keys.all { hasValue(it) }
   fun clear(@IdRes id: Int) = (state as MutableMap).remove(id)
 
-  fun validate(eventObserver: Observer<Event>, vararg validations: Validation): Boolean {
+  fun validate(vararg validations: Validation): Boolean {
     val errors: FormErrors = mutableMapOf()
     return (this.validations + validations.associate { it.id to it.rules })
         .filterKeys { state.containsKey(it) && enabled[it] ?: true }

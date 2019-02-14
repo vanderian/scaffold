@@ -51,7 +51,7 @@ interface FooIntents : FormIntents {
 }
 
 class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
-  val form = Form().withInputValidations(
+  val form = Form(event).withInputValidations(
       Validation(R.id.input_first, NotEmptyRule(R.string.error_empty), EmailRule(R.string.error_email)),
       Validation(R.id.input_second, NotEmptyRule(R.string.error_empty)),
       Validation(R.id.input_third, NotEmptyRule(R.string.error_empty), MinLengthRule())
@@ -61,13 +61,13 @@ class FooModel @Inject constructor() : ScreenModel<FooState, FooIntents>() {
     state.init(FooState("hello"))
 
     val submit = intents.submit()
-        .filter { form.validate(event) }
+        .filter { form.validate() }
 
     return CompositeDisposable(
         result.subscribe { event.onNext(ToastEvent(msg = "hello result ${it.request}")) },
         submit.subscribe { event.onNext(WithResultExplicit(MainActivity::class, iter)) },
         intents.back().subscribe { state.next { copy(text = "on back") } },
-        form.subscribe(intents, event)
+        form.subscribe(intents)
     )
   }
 }
