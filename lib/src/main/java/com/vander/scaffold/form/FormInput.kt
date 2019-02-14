@@ -82,7 +82,7 @@ class FormInput {
   }
 
   internal val focusChanges by lazy<Observable<Pair<Int, Boolean>>> {
-    Observable.merge(inputLayouts.map { v -> v.focusChanges().map { v.id to it } }).share()
+    Observable.merge(inputLayouts.map { v -> v.editText!!.focusChanges().map { v.id to it } }).share()
   }
 
   fun events(screen: Screen<*, *>): List<Observable<*>> = listOf(
