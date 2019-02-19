@@ -125,7 +125,7 @@ abstract class Screen<U : Screen.State, V : Screen.Intents>(
     if (hasNavController) {
       findNavController().currentDestination?.run {
         (arguments[RESULT]?.defaultValue as? Result)?.run { result(this) }
-        arguments.remove(RESULT)
+        removeArgument(RESULT)
       }
     }
   }
