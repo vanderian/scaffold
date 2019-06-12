@@ -13,8 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jakewharton.rxbinding3.appcompat.itemClicks
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
-import com.vander.scaffold.ui.widget.adapter.AdapterModel
-import com.vander.scaffold.ui.widget.adapter.RecyclerAdapter
+import com.vander.scaffold.ui.widget.adapter.AdapterItemEventObservable
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 import kotlin.reflect.KClass
@@ -60,12 +59,16 @@ interface MenuIntent : Screen.Intents {
   fun menu(): Observable<MenuItem> = toolbar.itemClicks()
 }
 
-interface ListIntents<T : AdapterModel, R> : Screen.Intents {
-  val adapter: RecyclerAdapter<T, R>
+interface ListIntent<R> : Screen.Intents {
+  val adapter: AdapterItemEventObservable<R>
+
+  fun onItem(): Observable<R> = adapter.itemEventSource.toObservable()
+}
+
+interface RefreshIntent : Screen.Intents {
   val refresh: SwipeRefreshLayout
 
   fun onRefresh(): Observable<Unit> = refresh.refreshes()
-  fun onItem(): Observable<R> = adapter.itemEventSource.toObservable()
 }
 
 interface PageIntents {

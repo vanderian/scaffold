@@ -12,7 +12,11 @@ abstract class ViewHolder<in T : AdapterModel, R>(root: View) : RecyclerView.Vie
   val context: Context
     get() = itemView.context
 
-  abstract fun bind(item: T)
+  /**
+   * In case that item is null it means that no item data was provided from data source and you need to implement placeholder view behaviour.
+   * For example with using PagedRecyclerAdapter and enabled item placeholder for unloaded pages.
+   */
+  abstract fun bind(item: T?)
 
   abstract fun attach()
 }

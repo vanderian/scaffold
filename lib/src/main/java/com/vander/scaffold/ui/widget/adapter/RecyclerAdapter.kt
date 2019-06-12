@@ -3,8 +3,7 @@ package com.vander.scaffold.ui.widget.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListUpdateCallback
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import io.reactivex.processors.PublishProcessor
 
 /**
@@ -16,9 +15,9 @@ import io.reactivex.processors.PublishProcessor
 class RecyclerAdapter<T : AdapterModel, R>(
     private val source: DataSource<T>,
     private val viewHolderFactory: (Int, View) -> ViewHolder<T, R>)
-  : RecyclerView.Adapter<ViewHolder<T, R>>(), ListUpdateCallback {
+  : RecyclerView.Adapter<ViewHolder<T, R>>(), ListUpdateCallback, AdapterItemEventObservable<R> {
 
-  val itemEventSource: PublishProcessor<R> = PublishProcessor.create<R>()
+  override val itemEventSource: PublishProcessor<R> = PublishProcessor.create<R>()
 
   init {
     source.listUpdateCallback = this
@@ -37,7 +36,7 @@ class RecyclerAdapter<T : AdapterModel, R>(
   override fun onViewAttachedToWindow(holder: ViewHolder<T, R>) {
     super.onViewAttachedToWindow(holder)
     holder.attach()
-    holder.disposable.addAll(holder.itemEvent.subscribe({ itemEventSource.onNext(it) }))
+    holder.disposable.addAll(holder.itemEvent.subscribe { itemEventSource.onNext(it) })
   }
 
   override fun onViewDetachedFromWindow(holder: ViewHolder<T, R>) {
